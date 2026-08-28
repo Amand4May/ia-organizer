@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_margin="8dp"
+    android:background="#F3F4F6">
+
+    <TextView
+        android:id="@+id/textTipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Despesa"
+        android:textStyle="bold"
+        android:textColor="#374151"
+        android:textAllCaps="true"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/textDescricao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descrição da tarefa"
+        android:textSize="18sp"
+        android:textColor="#111827"
+        android:layout_marginTop="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/textValor"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="R$ 0.00"
+            android:textColor="#059669"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2026-08-28"
+            android:textColor="#6B7280"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

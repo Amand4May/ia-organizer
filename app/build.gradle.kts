@@ -1,14 +1,28 @@
+import java.util.Properties
+
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
 android {
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace = "com.example.organizadoria"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
+        buildConfigField("String", "GROQ_API_KEY", "\"${properties.getProperty("GROQ_API_KEY")}\"")
         applicationId = "com.example.organizadoria"
         minSdk = 24
         targetSdk = 37
@@ -41,4 +55,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
 }
