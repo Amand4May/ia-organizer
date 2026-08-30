@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.OrganizadorIA" parent="Base.Theme.OrganizadorIA" />
+
+    <!-- Estilo para o Calendário com texto branco -->
+    <style name="CalendarioBranco" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
+    </style>
 </resources>

@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="azul_safira">#0F52BA</color>
+    <color name="cor_tarefa">#114a97</color>
+    <color name="cor_despesa">#a60000</color>
+    <color name="cor_receita">#2e6d15</color>
 </resources>

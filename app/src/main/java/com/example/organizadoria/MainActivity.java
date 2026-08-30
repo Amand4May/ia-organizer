@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import com.google.android.material.navigation.NavigationView;
+import android.content.Intent;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -23,6 +24,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,10 +45,19 @@ public class MainActivity extends AppCompatActivity {
     private AppDatabase db;
     private TarefaDao tarefaDao;
 
-    private final String PROMPT_SISTEMA = "Você é um assistente financeiro. O usuário vai te mandar uma frase. " +
-            "Sua única função é extrair os dados e me devolver EXATAMENTE um JSON, sem nenhuma outra palavra antes ou depois. " +
-            "O JSON deve ter as chaves: 'tipo' (escreva 'despesa', 'receita' ou 'tarefa'), 'descricao', 'valor' (apenas numero), " +
-            "e 'data' (formato YYYY-MM-DD, hoje é 2026-08-28).";
+    private String getPromptSistema() {
+        String hoje = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        return "Você é um organizador pessoal inteligente. O usuário vai te mandar uma frase e você deve extrair os dados. " +
+                "Sua única função é devolver EXATAMENTE um JSON ARRAY (uma lista []), sem nenhuma outra palavra. " +
+                "Cada objeto da lista deve ter as chaves: " +
+                "'tipo' (escreva 'tarefa' para compromissos; 'despesa' para gastos; 'receita' para ganhos), " +
+                "'descricao', 'valor' (apenas numero), " +
+                "'data' (formato YYYY-MM-DD), " +
+                "'horario' (formato HH:mm). " +
+                "Se o usuário mencionar um valor para um compromisso (ex: dentista 200 reais), coloque o valor tanto na 'tarefa' quanto na 'despesa'. " +
+                "Se não houver valor, use 0. " +
+                "Hoje é " + hoje + ".";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +74,42 @@ public class MainActivity extends AppCompatActivity {
 
         btnAbrirMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
+        navView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_agenda) {
+                startActivity(new Intent(this, AgendaActivity.class));
+            } else if (id == R.id.nav_financas) {
+                startActivity(new Intent(this, FinanceiroActivity.class));
+            } else if (id == R.id.nav_perfil) {
+                startActivity(new Intent(this, PerfilActivity.class));
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
         listaTarefas.setLayoutManager(new LinearLayoutManager(this));
         tarefaAdapter = new TarefaAdapter();
         listaTarefas.setAdapter(tarefaAdapter);
 
+        tarefaAdapter.setOnTarefaLongClickListener(tarefa -> {
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("Apagar")
+                    .setMessage("Deseja apagar este item?")
+                    .setPositiveButton("Sim", (dialog, which) -> {
+                        new Thread(() -> {
+                            tarefaDao.deletar(tarefa);
+                            List<Tarefa> atualizada = tarefaDao.buscarTodas();
+                            runOnUiThread(() -> tarefaAdapter.carregarListaCompleta(atualizada));
+                        }).start();
+                    })
+                    .setNegativeButton("Não", null)
+                    .show();
+        });
+
         // INICIALIZAÇÃO DO BANCO DE DADOS
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "banco_organizadoria").build();
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "banco_organizadoria")
+                .fallbackToDestructiveMigration()
+                .build();
         tarefaDao = db.tarefaDao();
 
         // BUSCA AS TAREFAS SALVAS AO ABRIR O APP
@@ -96,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         JsonObject systemMessage = new JsonObject();
         systemMessage.addProperty("role", "system");
-        systemMessage.addProperty("content", PROMPT_SISTEMA);
+        systemMessage.addProperty("content", getPromptSistema());
         messages.add(systemMessage);
 
         JsonObject userMessage = new JsonObject();
@@ -121,20 +164,32 @@ public class MainActivity extends AppCompatActivity {
                                 .get("content").getAsString();
 
                         respostaIA = respostaIA.replace("'", "\"");
-                        JsonObject jsonRecebido = new JsonParser().parse(respostaIA).getAsJsonObject();
+                        com.google.gson.JsonElement element = new JsonParser().parse(respostaIA);
+                        JsonArray jsonArray;
+                        
+                        if (element.isJsonArray()) {
+                            jsonArray = element.getAsJsonArray();
+                        } else {
+                            jsonArray = new JsonArray();
+                            jsonArray.add(element.getAsJsonObject());
+                        }
 
-                        String tipo = jsonRecebido.get("tipo").getAsString();
-                        String descricao = jsonRecebido.get("descricao").getAsString();
-                        double valor = jsonRecebido.get("valor").getAsDouble();
-                        String data = jsonRecebido.get("data").getAsString();
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject jsonRecebido = jsonArray.get(i).getAsJsonObject();
+                            String tipo = jsonRecebido.get("tipo").getAsString();
+                            String descricao = jsonRecebido.get("descricao").getAsString();
+                            double valor = jsonRecebido.get("valor").getAsDouble();
+                            String data = jsonRecebido.get("data").getAsString();
+                            String horario = jsonRecebido.has("horario") ? jsonRecebido.get("horario").getAsString() : "09:00";
 
-                        Tarefa novaTarefa = new Tarefa(tipo, descricao, valor, data);
+                            Tarefa novaTarefa = new Tarefa(tipo, descricao, valor, data, horario);
 
-                        // SALVA A TAREFA NO BANCO ANTES DE MOSTRAR NA TELA
-                        new Thread(() -> {
-                            tarefaDao.inserir(novaTarefa);
-                            runOnUiThread(() -> tarefaAdapter.adicionarTarefa(novaTarefa));
-                        }).start();
+                            // SALVA NO BANCO E ATUALIZA A TELA
+                            new Thread(() -> {
+                                tarefaDao.inserir(novaTarefa);
+                                runOnUiThread(() -> tarefaAdapter.adicionarTarefa(novaTarefa));
+                            }).start();
+                        }
 
                     } catch (Exception e) {
                         Toast.makeText(MainActivity.this, "Erro ao ler JSON: " + e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,15 @@ import java.util.List;
 public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaViewHolder> {
 
     private List<Tarefa> listaTarefas = new ArrayList<>();
+    private OnTarefaLongClickListener longClickListener;
+
+    public interface OnTarefaLongClickListener {
+        void onTarefaLongClick(Tarefa tarefa);
+    }
+
+    public void setOnTarefaLongClickListener(OnTarefaLongClickListener listener) {
+        this.longClickListener = listener;
+    }
 
     // Método para adicionar um item novo e avisar a tela para atualizar a interface
     public void adicionarTarefa(Tarefa novaTarefa) {
@@ -40,8 +50,38 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
 
         holder.textTipo.setText(tarefa.getTipo());
         holder.textDescricao.setText(tarefa.getDescricao());
-        holder.textValor.setText(String.format("R$ %.2f", tarefa.getValor()));
+        
+        int cor;
+        String tipo = tarefa.getTipo().toLowerCase();
+        
+        if (tipo.contains("receita")) {
+            cor = ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_receita);
+        } else if (tipo.contains("despesa")) {
+            cor = ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_despesa);
+        } else {
+            cor = ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_tarefa);
+        }
+        
+        holder.textTipo.setTextColor(cor);
+        
+        if (tarefa.getValor() > 0) {
+            holder.textValor.setVisibility(View.VISIBLE);
+            holder.textValor.setText(String.format("R$ %.2f", tarefa.getValor()));
+            holder.textValor.setTextColor(cor);
+        } else {
+            holder.textValor.setVisibility(View.GONE);
+        }
+        
         holder.textData.setText(tarefa.getData());
+        holder.textHorario.setText(tarefa.getHorario());
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onTarefaLongClick(tarefa);
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -51,7 +91,7 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
 
     // Classe interna que mapeia as textviews do XML para a memória do Java
     static class TarefaViewHolder extends RecyclerView.ViewHolder {
-        TextView textTipo, textDescricao, textValor, textData;
+        TextView textTipo, textDescricao, textValor, textData, textHorario;
 
         public TarefaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +99,7 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             textDescricao = itemView.findViewById(R.id.textDescricao);
             textValor = itemView.findViewById(R.id.textValor);
             textData = itemView.findViewById(R.id.textData);
+            textHorario = itemView.findViewById(R.id.textHorario);
         }
     }
 }
