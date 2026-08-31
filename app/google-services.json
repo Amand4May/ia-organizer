@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "546045847502",
+    "project_id": "ia-organizer-4c631",
+    "storage_bucket": "ia-organizer-4c631.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546045847502:android:cfa8f3f46701660f57ad9f",
+        "android_client_info": {
+          "package_name": "com.example.organizadoria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCa9sNBOq0JblXMlQ8yQ74SypMub-1zgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

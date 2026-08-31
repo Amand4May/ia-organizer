@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "OrganizadorIA"
+rootProject.name = "Cogni"
 include(":app")

@@ -6,4 +6,5 @@
     <color name="cor_tarefa">#114a97</color>
     <color name="cor_despesa">#a60000</color>
     <color name="cor_receita">#2e6d15</color>
+    <color name="cor_fundo">#0a0f17</color>
 </resources>

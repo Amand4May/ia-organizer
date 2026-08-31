@@ -6,15 +6,21 @@ import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class AgendaActivity extends AppCompatActivity {
 
+    private DrawerLayout drawerLayout;
     private RecyclerView listaAgenda;
     private TextView textVazio;
     private CalendarView calendarView;
@@ -28,12 +34,40 @@ public class AgendaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agenda);
 
-        ImageButton btnVoltar = findViewById(R.id.btnVoltar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        ImageButton btnAbrirMenu = findViewById(R.id.btnAbrirMenu);
+        NavigationView navView = findViewById(R.id.navView);
         listaAgenda = findViewById(R.id.listaAgenda);
         textVazio = findViewById(R.id.textVazio);
         calendarView = findViewById(R.id.calendarView);
 
-        btnVoltar.setOnClickListener(v -> finish());
+        btnAbrirMenu.setOnClickListener(v -> {
+            if (drawerLayout != null) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        if (navView != null) {
+            navView.setNavigationItemSelectedListener(item -> {
+                int id = item.getItemId();
+                if (id == R.id.nav_inicio) {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                } else if (id == R.id.nav_agenda) {
+                    // Já está na agenda
+                } else if (id == R.id.nav_financas) {
+                    startActivity(new Intent(this, FinanceiroActivity.class));
+                    finish();
+                } else if (id == R.id.nav_perfil) {
+                    startActivity(new Intent(this, PerfilActivity.class));
+                    finish();
+                }
+                if (drawerLayout != null) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+                return true;
+            });
+        }
 
         listaAgenda.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TarefaAdapter();
@@ -68,7 +102,7 @@ public class AgendaActivity extends AppCompatActivity {
 
     private void carregarAgenda() {
         new Thread(() -> {
-            todasAsTarefas = tarefaDao.buscarApenasTarefas();
+            todasAsTarefas = tarefaDao.buscarApenasTarefas(FirebaseAuth.getInstance().getUid());
             
             long date = calendarView.getDate();
             java.util.Calendar cal = java.util.Calendar.getInstance();

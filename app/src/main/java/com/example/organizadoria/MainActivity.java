@@ -27,6 +27,7 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("Sim", (dialog, which) -> {
                         new Thread(() -> {
                             tarefaDao.deletar(tarefa);
-                            List<Tarefa> atualizada = tarefaDao.buscarTodas();
+                            List<Tarefa> atualizada = tarefaDao.buscarTodas(FirebaseAuth.getInstance().getUid());
                             runOnUiThread(() -> tarefaAdapter.carregarListaCompleta(atualizada));
                         }).start();
                     })
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         // BUSCA AS TAREFAS SALVAS AO ABRIR O APP
         new Thread(() -> {
-            List<Tarefa> tarefasSalvas = tarefaDao.buscarTodas();
+            List<Tarefa> tarefasSalvas = tarefaDao.buscarTodas(FirebaseAuth.getInstance().getUid());
             runOnUiThread(() -> tarefaAdapter.carregarListaCompleta(tarefasSalvas));
         }).start();
 
@@ -132,6 +133,27 @@ public class MainActivity extends AppCompatActivity {
                 inputComando.setText("");
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        atualizarSaudacao();
+    }
+
+    private void atualizarSaudacao() {
+        String currentUserId = FirebaseAuth.getInstance().getUid();
+        if (currentUserId == null) return;
+        
+        String nomeUsuario = getSharedPreferences("DadosPerfil_" + currentUserId, MODE_PRIVATE).getString("nome", "");
+        TextView textSaudacao = findViewById(R.id.textSaudacao);
+        
+        if (!nomeUsuario.isEmpty()) {
+            String primeiroNome = nomeUsuario.split(" ")[0];
+            textSaudacao.setText("Vamos organizar, " + primeiroNome + "?");
+        } else {
+            textSaudacao.setText("Vamos organizar?");
+        }
     }
 
     private void chamarIA(String comandoUsuario) {
@@ -182,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                             String data = jsonRecebido.get("data").getAsString();
                             String horario = jsonRecebido.has("horario") ? jsonRecebido.get("horario").getAsString() : "09:00";
 
-                            Tarefa novaTarefa = new Tarefa(tipo, descricao, valor, data, horario);
+                            Tarefa novaTarefa = new Tarefa(FirebaseAuth.getInstance().getUid(), tipo, descricao, valor, data, horario);
 
                             // SALVA NO BANCO E ATUALIZA A TELA
                             new Thread(() -> {

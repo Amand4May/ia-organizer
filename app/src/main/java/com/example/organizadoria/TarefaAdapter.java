@@ -72,7 +72,7 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             holder.textValor.setVisibility(View.GONE);
         }
         
-        holder.textData.setText(tarefa.getData());
+        holder.textData.setText(tarefa.getDataExibicao());
         holder.textHorario.setText(tarefa.getHorario());
 
         holder.itemView.setOnLongClickListener(v -> {

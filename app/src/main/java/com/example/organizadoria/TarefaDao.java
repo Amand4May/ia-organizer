@@ -15,16 +15,12 @@ public interface TarefaDao {
     @Delete
     void deletar(Tarefa tarefa);
 
-    // Traz todas as tarefas, ordenadas pela data (mais próxima primeiro)
-    // Se a data for igual, o id DESC mostra o mais recente adicionado antes
-    @Query("SELECT * FROM tabela_tarefas ORDER BY data ASC, id DESC")
-    List<Tarefa> buscarTodas();
+    @Query("SELECT * FROM tabela_tarefas WHERE userId = :uId ORDER BY data ASC, id DESC")
+    List<Tarefa> buscarTodas(String uId);
 
-    // Traz apenas o que for do tipo "despesa" ou "receita" para a aba financeira
-    @Query("SELECT * FROM tabela_tarefas WHERE tipo != 'tarefa' ORDER BY data DESC, id DESC")
-    List<Tarefa> buscarApenasFinancas();
+    @Query("SELECT * FROM tabela_tarefas WHERE userId = :uId AND tipo != 'tarefa' ORDER BY data DESC, id DESC")
+    List<Tarefa> buscarApenasFinancas(String uId);
 
-    // Traz apenas o que for do tipo "tarefa" para a agenda
-    @Query("SELECT * FROM tabela_tarefas WHERE tipo = 'tarefa' ORDER BY data ASC, horario ASC")
-    List<Tarefa> buscarApenasTarefas();
+    @Query("SELECT * FROM tabela_tarefas WHERE userId = :uId AND tipo = 'tarefa' ORDER BY data ASC, horario ASC")
+    List<Tarefa> buscarApenasTarefas(String uId);
 }
