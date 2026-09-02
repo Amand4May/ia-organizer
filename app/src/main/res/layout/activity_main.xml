@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cor_teste"
+    android:background="@color/cor_fundo"
     android:fitsSystemWindows="true"> <!-- Esta linha impede o menu de encostar no relógio -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
