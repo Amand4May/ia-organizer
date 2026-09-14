@@ -1,230 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cor_fundo"
     android:fitsSystemWindows="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tituloFinanceiro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        android:text="Financeiro"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tituloFinanceiro"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav">
 
-        <ImageButton
-            android:id="@+id/btnAbrirMenu"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_sort_by_size"
-            app:tint="#E3E3E3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/tituloFinanceiro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Financeiro"
-            android:textColor="#E3E3E3"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/btnAbrirMenu"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnAbrirMenu" />
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/tituloFinanceiro"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Card Saldo Disponível -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/cor_card"
+                app:cardCornerRadius="24dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#232C4A">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Saldo disponível"
+                        android:textColor="@color/cor_texto_secundario"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/textSaldoDisponivel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="R$ 0,00"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:id="@+id/badgeSalarioResumo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_receita"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:text="Salário +R$0"
+                            android:textColor="@color/cor_receita"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/badgeAssinaturasResumo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_despesa"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:text="Assinaturas -R$0"
+                            android:textColor="@color/cor_despesa"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Grid 2x2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <!-- Salário -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/cor_card"
+                    app:cardCornerRadius="20dp"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@android:drawable/ic_menu_sort_by_size"
+                            app:tint="@color/cor_receita"
+                            android:layout_marginBottom="24dp"
+                            android:rotation="180" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Salário"
+                            android:textColor="@color/cor_texto_secundario"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/textSalario"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="R$ 0,00"
+                            android:textColor="@color/cor_receita"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Assinaturas -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/cor_card"
+                    app:cardCornerRadius="20dp"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@android:drawable/ic_menu_agenda"
+                            app:tint="@color/cor_despesa"
+                            android:layout_marginBottom="24dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Assinaturas"
+                            android:textColor="@color/cor_texto_secundario"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/textGastosFixos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="R$ 0,00"
+                            android:textColor="@color/cor_despesa"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
-                <!-- Primeira Linha: Salário e Assinaturas -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <!-- Gastos do mês -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:baselineAligned="false">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/cor_card"
+                    app:cardCornerRadius="20dp"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginBottom="12dp"
-                        app:cardBackgroundColor="#1E1F22"
-                        app:cardCornerRadius="20dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/azul_safira">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Salário"
-                                android:textColor="#8E8E8E"
-                                android:textSize="12sp" />
-                            <TextView
-                                android:id="@+id/textSalario"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="R$ 0,00"
-                                android:textColor="#4CAF50"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginBottom="12dp"
-                        app:cardBackgroundColor="#1E1F22"
-                        app:cardCornerRadius="20dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/azul_safira">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Assinaturas"
-                                android:textColor="#8E8E8E"
-                                android:textSize="12sp" />
-                            <TextView
-                                android:id="@+id/textGastosFixos"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="R$ 0,00"
-                                android:textColor="#F44336"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            app:tint="@color/cor_vermelho"
+                            android:layout_marginBottom="24dp" />
 
-                <!-- Segunda Linha: Gastos do Mês e Investimentos -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gastos do mês"
+                            android:textColor="@color/cor_texto_secundario"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/textGastosMes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="R$ 0,00"
+                            android:textColor="@color/cor_vermelho"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Investimentos -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:baselineAligned="false">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/cor_card"
+                    app:cardCornerRadius="20dp"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginBottom="12dp"
-                        app:cardBackgroundColor="#1E1F22"
-                        app:cardCornerRadius="20dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/azul_safira">
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@android:drawable/ic_menu_sort_by_size"
+                            app:tint="@color/azul_safira"
+                            android:layout_marginBottom="24dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Gastos Mês"
-                                android:textColor="#8E8E8E"
-                                android:textSize="12sp" />
-                            <TextView
-                                android:id="@+id/textGastosMes"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="R$ 0,00"
-                                android:textColor="#FF9800"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginBottom="12dp"
-                        app:cardBackgroundColor="#1E1F22"
-                        app:cardCornerRadius="20dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/azul_safira">
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                            android:text="Investimentos"
+                            android:textColor="@color/cor_texto_secundario"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/textInvestimentos"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Investimentos"
-                                android:textColor="#8E8E8E"
-                                android:textSize="12sp" />
-                            <TextView
-                                android:id="@+id/textInvestimentos"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="R$ 0,00"
-                                android:textColor="#2196F3"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Extrato Detalhado"
-                    android:textColor="#E3E3E3"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/listaFinancas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
-
+                            android:layout_marginTop="4dp"
+                            android:text="R$ 0,00"
+                            android:textColor="@color/azul_safira"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
-        </ScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Lista Extrato (Sempre visível) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
+                android:text="Extrato detalhado"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#1E1F22"
-        app:itemTextColor="#E3E3E3"
-        app:menu="@menu/menu_lateral" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listaFinancas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginHorizontal="-24dp" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_bottom_nav"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemRippleColor="@android:color/transparent"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

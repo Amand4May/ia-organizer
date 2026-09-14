@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        buildConfigField("String", "GROQ_API_KEY", "\"${properties.getProperty("GROQ_API_KEY")}\"")
+        buildConfigField("String", "GROQ_API_KEY", "\"${properties.getProperty("GROQ_API_KEY").orEmpty().trim()}\"")
         applicationId = "com.example.organizadoria"
         minSdk = 24
         targetSdk = 37
@@ -49,6 +49,7 @@ android {
 dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-firestore")
     
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

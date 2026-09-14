@@ -2,9 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="azul_safira">#0F52BA</color>
-    <color name="cor_tarefa">#114a97</color>
-    <color name="cor_despesa">#a60000</color>
-    <color name="cor_receita">#2e6d15</color>
-    <color name="cor_fundo">#0a0f17</color>
+    <color name="azul_safira">#2962FF</color>
+    <color name="cor_tarefa">#2962FF</color>
+    <color name="cor_despesa">#FF9800</color>
+    <color name="cor_receita">#00E676</color>
+    <color name="cor_fundo">#0A0F17</color>
+    <color name="cor_card">#16181F</color>
+    <color name="cor_texto_secundario">#8E8E8E</color>
+    <color name="ciano">#00E5FF</color>
+    <color name="cor_vermelho">#F44336</color>
 </resources>

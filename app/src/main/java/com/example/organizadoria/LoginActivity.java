@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText editEmail, editSenha, editNome, editDataNascimento;
     private MaterialButton btnEntrar;
-    private TextView btnIrParaCadastro;
+    private TextView btnIrParaCadastro, btnEsqueceuSenha;
     private FirebaseAuth mAuth;
     private boolean isModoCadastro = false;
 
@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         editSenha = findViewById(R.id.editSenha);
         btnEntrar = findViewById(R.id.btnEntrar);
         btnIrParaCadastro = findViewById(R.id.btnIrParaCadastro);
+        btnEsqueceuSenha = findViewById(R.id.btnEsqueceuSenha);
 
         configurarMascaraData();
 
@@ -55,12 +56,34 @@ public class LoginActivity extends AppCompatActivity {
                 loginUsuario();
             }
         });
+
+        if (btnEsqueceuSenha != null) {
+            btnEsqueceuSenha.setOnClickListener(v -> redefinirSenha());
+        }
         
         // Configurar estado inicial (Login)
         isModoCadastro = true; // Forçamos true para que o alternarModo mude para false (Login)
         alternarModo(); 
         
         btnIrParaCadastro.setOnClickListener(v -> alternarModo());
+    }
+
+    private void redefinirSenha() {
+        String email = editEmail.getText().toString().trim();
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Digite seu e-mail para redefinir a senha", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "E-mail de redefinição enviado para " + email, Toast.LENGTH_LONG).show();
+                    } else {
+                        String err = task.getException() != null ? task.getException().getMessage() : "Erro";
+                        Toast.makeText(this, "Erro: " + err, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void configurarMascaraData() {
@@ -94,10 +117,10 @@ public class LoginActivity extends AppCompatActivity {
                             clean.substring(2, 4),
                             clean.substring(4, 8));
 
-                    sel = sel < 0 ? 0 : sel;
+                    sel = Math.max(0, sel);
                     current = clean;
                     editDataNascimento.setText(current);
-                    editDataNascimento.setSelection(sel < current.length() ? sel : current.length());
+                    editDataNascimento.setSelection(Math.min(sel, current.length()));
                 }
             }
 
@@ -110,9 +133,25 @@ public class LoginActivity extends AppCompatActivity {
         isModoCadastro = !isModoCadastro;
         
         int visibilidade = isModoCadastro ? View.VISIBLE : View.GONE;
-        findViewById(R.id.imgPerfilPlaceholder).setVisibility(visibilidade);
-        findViewById(R.id.layoutNome).setVisibility(visibilidade);
-        findViewById(R.id.layoutDataNascimento).setVisibility(visibilidade);
+        
+        View imgPlaceholder = findViewById(R.id.imgPerfilPlaceholder);
+        if (imgPlaceholder != null) imgPlaceholder.setVisibility(visibilidade);
+
+        View labelNome = findViewById(R.id.labelNome);
+        if (labelNome != null) labelNome.setVisibility(visibilidade);
+
+        View layoutNome = findViewById(R.id.layoutNome);
+        if (layoutNome != null) layoutNome.setVisibility(visibilidade);
+
+        View labelData = findViewById(R.id.labelDataNascimento);
+        if (labelData != null) labelData.setVisibility(visibilidade);
+
+        View layoutData = findViewById(R.id.layoutDataNascimento);
+        if (layoutData != null) layoutData.setVisibility(visibilidade);
+
+        if (btnEsqueceuSenha != null) {
+            btnEsqueceuSenha.setVisibility(isModoCadastro ? View.GONE : View.VISIBLE);
+        }
         
         if (isModoCadastro) {
             btnEntrar.setText("Criar Conta");
@@ -140,11 +179,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUsuario() {
-        String email = editEmail.getText().toString();
-        String senha = editSenha.getText().toString();
+        String email = editEmail.getText().toString().trim();
+        String senha = editSenha.getText().toString().trim();
 
         if (email.isEmpty() || senha.isEmpty()) {
-            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Preencha e-mail e senha", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -153,16 +192,17 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         irParaHome();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Erro ao entrar: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        String msg = task.getException() != null ? task.getException().getMessage() : "Erro ao entrar";
+                        Toast.makeText(LoginActivity.this, "Erro ao entrar: " + msg, Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void registrarUsuario() {
-        String nome = editNome.getText().toString();
-        String nascimento = editDataNascimento.getText().toString();
-        String email = editEmail.getText().toString();
-        String senha = editSenha.getText().toString();
+        String nome = editNome.getText().toString().trim();
+        String nascimento = editDataNascimento.getText().toString().trim();
+        String email = editEmail.getText().toString().trim();
+        String senha = editSenha.getText().toString().trim();
 
         if (nome.isEmpty() || nascimento.isEmpty() || email.isEmpty() || senha.isEmpty()) {
             Toast.makeText(this, "Preencha todos os campos para criar conta", Toast.LENGTH_SHORT).show();
@@ -183,7 +223,8 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
                         irParaHome();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Erro ao criar: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        String msg = task.getException() != null ? task.getException().getMessage() : "Erro ao criar";
+                        Toast.makeText(LoginActivity.this, "Erro ao criar: " + msg, Toast.LENGTH_LONG).show();
                     }
                 });
     }

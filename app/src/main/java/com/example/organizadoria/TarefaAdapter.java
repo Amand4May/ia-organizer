@@ -3,12 +3,19 @@ package com.example.organizadoria;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaViewHolder> {
 
@@ -23,13 +30,11 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         this.longClickListener = listener;
     }
 
-    // Método para adicionar um item novo e avisar a tela para atualizar a interface
     public void adicionarTarefa(Tarefa novaTarefa) {
-        listaTarefas.add(0, novaTarefa); // Adiciona no topo da lista
+        listaTarefas.add(0, novaTarefa);
         notifyItemInserted(0);
     }
 
-    // Método para carregar a lista do banco de dados ao abrir o app
     public void carregarListaCompleta(List<Tarefa> tarefasDoBanco) {
         this.listaTarefas.clear();
         this.listaTarefas.addAll(tarefasDoBanco);
@@ -39,7 +44,6 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
     @NonNull
     @Override
     public TarefaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // "Infla" (renderiza) o arquivo XML na memória
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tarefa, parent, false);
         return new TarefaViewHolder(view);
     }
@@ -48,32 +52,50 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
     public void onBindViewHolder(@NonNull TarefaViewHolder holder, int position) {
         Tarefa tarefa = listaTarefas.get(position);
 
-        holder.textTipo.setText(tarefa.getTipo());
         holder.textDescricao.setText(tarefa.getDescricao());
-        
-        int cor;
+        holder.textSubtitulo.setText(tarefa.getDataExibicao()); // Usando a data como subtitulo padrão
+
         String tipo = tarefa.getTipo().toLowerCase();
-        
+
         if (tipo.contains("receita")) {
-            cor = ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_receita);
+            holder.iconContainer.setBackgroundResource(R.drawable.bg_icon_receita);
+            holder.imgIcon.setImageResource(R.drawable.ic_target_blue);
+            holder.badgeContainer.setBackgroundResource(R.drawable.bg_badge_receita);
+            holder.textBadge.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_receita));
+            holder.textBadge.setText(String.format("+R$ %.2f", tarefa.getValor()));
+
         } else if (tipo.contains("despesa")) {
-            cor = ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_despesa);
+            holder.iconContainer.setBackgroundResource(R.drawable.bg_icon_despesa);
+            holder.imgIcon.setImageResource(R.drawable.ic_card_yellow);
+            holder.badgeContainer.setBackgroundResource(R.drawable.bg_badge_despesa);
+            holder.textBadge.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_despesa));
+            holder.textBadge.setText(String.format("R$ %.2f", tarefa.getValor()));
+
         } else {
-            cor = ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_tarefa);
+            // Tarefa
+            holder.iconContainer.setBackgroundResource(R.drawable.bg_icon_tarefa);
+            holder.imgIcon.setImageResource(R.drawable.ic_calendar_cyan);
+            holder.badgeContainer.setBackgroundResource(R.drawable.bg_badge_tarefa);
+            holder.textBadge.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.ciano));
+
+            String hoje = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            String amanha = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime());
+
+            String dataTarefa = tarefa.getData();
+            String sufixo = "";
+            if (dataTarefa != null) {
+                if (dataTarefa.equals(hoje)) {
+                    sufixo = " hoje";
+                } else if (dataTarefa.equals(amanha)) {
+                    sufixo = " amanhã";
+                }
+            }
+
+            holder.textBadge.setText(tarefa.getHorario() + sufixo);
+            holder.textSubtitulo.setText("Agendado para " + tarefa.getDataExibicao());
         }
-        
-        holder.textTipo.setTextColor(cor);
-        
-        if (tarefa.getValor() > 0) {
-            holder.textValor.setVisibility(View.VISIBLE);
-            holder.textValor.setText(String.format("R$ %.2f", tarefa.getValor()));
-            holder.textValor.setTextColor(cor);
-        } else {
-            holder.textValor.setVisibility(View.GONE);
-        }
-        
-        holder.textData.setText(tarefa.getDataExibicao());
-        holder.textHorario.setText(tarefa.getHorario());
 
         holder.itemView.setOnLongClickListener(v -> {
             if (longClickListener != null) {
@@ -89,17 +111,20 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         return listaTarefas.size();
     }
 
-    // Classe interna que mapeia as textviews do XML para a memória do Java
     static class TarefaViewHolder extends RecyclerView.ViewHolder {
-        TextView textTipo, textDescricao, textValor, textData, textHorario;
+        FrameLayout iconContainer;
+        ImageView imgIcon;
+        TextView textDescricao, textSubtitulo, textBadge;
+        LinearLayout badgeContainer;
 
         public TarefaViewHolder(@NonNull View itemView) {
             super(itemView);
-            textTipo = itemView.findViewById(R.id.textTipo);
+            iconContainer = itemView.findViewById(R.id.iconContainer);
+            imgIcon = itemView.findViewById(R.id.imgIcon);
             textDescricao = itemView.findViewById(R.id.textDescricao);
-            textValor = itemView.findViewById(R.id.textValor);
-            textData = itemView.findViewById(R.id.textData);
-            textHorario = itemView.findViewById(R.id.textHorario);
+            textSubtitulo = itemView.findViewById(R.id.textSubtitulo);
+            textBadge = itemView.findViewById(R.id.textBadge);
+            badgeContainer = itemView.findViewById(R.id.badgeContainer);
         }
     }
 }

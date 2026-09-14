@@ -7,13 +7,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.content.Intent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
-import com.google.android.material.navigation.NavigationView;
-import android.content.Intent;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -23,17 +21,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.ArrayList;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
-    private ImageButton btnAbrirMenu;
-    private NavigationView navView;
+    private BottomNavigationView bottomNav;
 
     private EditText inputComando;
     private ImageButton btnEnviar;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     // Variáveis do Banco de Dados
     private AppDatabase db;
     private TarefaDao tarefaDao;
+    private FirebaseFirestore firestoreDb;
 
     private String getPromptSistema() {
         String hoje = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -65,26 +66,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        btnAbrirMenu = findViewById(R.id.btnAbrirMenu);
-        navView = findViewById(R.id.navView);
+        bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setSelectedItemId(R.id.nav_inicio);
 
         inputComando = findViewById(R.id.inputComando);
         btnEnviar = findViewById(R.id.btnEnviar);
         listaTarefas = findViewById(R.id.listaTarefas);
 
-        btnAbrirMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        firestoreDb = FirebaseFirestore.getInstance();
 
-        navView.setNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_agenda) {
                 startActivity(new Intent(this, AgendaActivity.class));
+                overridePendingTransition(0, 0);
             } else if (id == R.id.nav_financas) {
                 startActivity(new Intent(this, FinanceiroActivity.class));
+                overridePendingTransition(0, 0);
             } else if (id == R.id.nav_perfil) {
                 startActivity(new Intent(this, PerfilActivity.class));
+                overridePendingTransition(0, 0);
             }
-            drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
 
@@ -97,27 +99,20 @@ public class MainActivity extends AppCompatActivity {
                     .setTitle("Apagar")
                     .setMessage("Deseja apagar este item?")
                     .setPositiveButton("Sim", (dialog, which) -> {
-                        new Thread(() -> {
-                            tarefaDao.deletar(tarefa);
-                            List<Tarefa> atualizada = tarefaDao.buscarTodas(FirebaseAuth.getInstance().getUid());
-                            runOnUiThread(() -> tarefaAdapter.carregarListaCompleta(atualizada));
-                        }).start();
+                        deletarTarefa(tarefa);
                     })
                     .setNegativeButton("Não", null)
                     .show();
         });
 
-        // INICIALIZAÇÃO DO BANCO DE DADOS
+        // INICIALIZAÇÃO DO BANCO DE DADOS LOCAL
         db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "banco_organizadoria")
                 .fallbackToDestructiveMigration()
                 .build();
         tarefaDao = db.tarefaDao();
 
-        // BUSCA AS TAREFAS SALVAS AO ABRIR O APP
-        new Thread(() -> {
-            List<Tarefa> tarefasSalvas = tarefaDao.buscarTodas(FirebaseAuth.getInstance().getUid());
-            runOnUiThread(() -> tarefaAdapter.carregarListaCompleta(tarefasSalvas));
-        }).start();
+        // ESCUTAR TAREFAS DA NUVEM (FIRESTORE) EM TEMPO REAL
+        escutarTarefasFirestore();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.groq.com/")
@@ -133,6 +128,61 @@ public class MainActivity extends AppCompatActivity {
                 inputComando.setText("");
             }
         });
+
+        TextView labelVerTudo = findViewById(R.id.labelVerTudo);
+        if (labelVerTudo != null) {
+            labelVerTudo.setOnClickListener(v -> {
+                startActivity(new Intent(this, AgendaActivity.class));
+                overridePendingTransition(0, 0);
+            });
+        }
+
+        if (getIntent().getBooleanExtra("focarInput", false)) {
+            inputComando.requestFocus();
+        }
+    }
+
+    private void escutarTarefasFirestore() {
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) return;
+
+        firestoreDb.collection("users")
+                .document(userId)
+                .collection("tarefas")
+                .orderBy("data", Query.Direction.ASCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e("FIRESTORE_ERRO", "Erro ao carregar do Firestore", error);
+                        return;
+                    }
+                    if (value != null) {
+                        List<Tarefa> lista = new ArrayList<>();
+                        for (DocumentSnapshot doc : value.getDocuments()) {
+                            Tarefa t = doc.toObject(Tarefa.class);
+                            if (t != null) {
+                                t.setDocId(doc.getId());
+                                lista.add(t);
+                            }
+                        }
+                        tarefaAdapter.carregarListaCompleta(lista);
+                    }
+                });
+    }
+
+    private void deletarTarefa(Tarefa tarefa) {
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) return;
+
+        if (tarefa.getDocId() != null) {
+            firestoreDb.collection("users")
+                    .document(userId)
+                    .collection("tarefas")
+                    .document(tarefa.getDocId())
+                    .delete();
+        }
+
+        // Também apaga localmente
+        new Thread(() -> tarefaDao.deletar(tarefa)).start();
     }
 
     @Override
@@ -143,6 +193,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void atualizarSaudacao() {
         String currentUserId = FirebaseAuth.getInstance().getUid();
+
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        int hora = cal.get(java.util.Calendar.HOUR_OF_DAY);
+        String periodo;
+        if (hora >= 5 && hora < 12) {
+            periodo = "BOM DIA";
+        } else if (hora >= 12 && hora < 18) {
+            periodo = "BOA TARDE";
+        } else {
+            periodo = "BOA NOITE";
+        }
+
+        TextView textBomDia = findViewById(R.id.textBomDia);
+        if (textBomDia != null) {
+            textBomDia.setText(periodo);
+        }
+
         if (currentUserId == null) return;
         
         String nomeUsuario = getSharedPreferences("DadosPerfil_" + currentUserId, MODE_PRIVATE).getString("nome", "");
@@ -150,9 +217,71 @@ public class MainActivity extends AppCompatActivity {
         
         if (!nomeUsuario.isEmpty()) {
             String primeiroNome = nomeUsuario.split(" ")[0];
-            textSaudacao.setText("Vamos organizar, " + primeiroNome + "?");
+            textSaudacao.setText("Vamos organizar,\n" + primeiroNome + "?");
         } else {
             textSaudacao.setText("Vamos organizar?");
+        }
+    }
+
+    private void verificarEAtualizarAssinaturaNoPerfil(String tipo, String descricao, double valor) {
+        if (tipo == null || descricao == null || valor <= 0) return;
+
+        String descLower = descricao.toLowerCase();
+        String currentUserId = FirebaseAuth.getInstance().getUid();
+        if (currentUserId == null) return;
+
+        android.content.SharedPreferences prefs = getSharedPreferences("DadosPerfil_" + currentUserId, MODE_PRIVATE);
+
+        // 1. Assinaturas
+        boolean isAssinatura = descLower.contains("assinatura") || descLower.contains("assinar") || 
+                               descLower.contains("mensalidade") || descLower.contains("plano") || 
+                               descLower.contains("fixo") || descLower.contains("aluguel") || 
+                               descLower.contains("internet") || descLower.contains("luz") || 
+                               descLower.contains("água") || descLower.contains("curso") || 
+                               descLower.contains("spotify") || descLower.contains("netflix") || 
+                               descLower.contains("prime") || descLower.contains("hbo") || 
+                               descLower.contains("disney") || descLower.contains("clube") || 
+                               descLower.contains("academia");
+
+        if (tipo.equalsIgnoreCase("despesa") && isAssinatura) {
+            String assinaturasAtuaisStr = prefs.getString("assinaturas", "0").replace(",", ".");
+            double assinaturasAtuais = 0;
+            try { assinaturasAtuais = Double.parseDouble(assinaturasAtuaisStr.isEmpty() ? "0" : assinaturasAtuaisStr); } catch (Exception ignored) {}
+            double novoTotal = assinaturasAtuais + valor;
+            String valStr = String.format(Locale.US, "%.2f", novoTotal);
+            prefs.edit().putString("assinaturas", valStr).apply();
+            firestoreDb.collection("users").document(currentUserId).update("assinaturas", valStr);
+        }
+
+        // 2. Salário / Renda
+        boolean isSalario = tipo.equalsIgnoreCase("receita") || 
+                            descLower.contains("salário") || descLower.contains("salario") || 
+                            descLower.contains("renda") || descLower.contains("pagamento");
+
+        if (isSalario) {
+            String rendaAtualStr = prefs.getString("renda", "0").replace(",", ".");
+            double rendaAtual = 0;
+            try { rendaAtual = Double.parseDouble(rendaAtualStr.isEmpty() ? "0" : rendaAtualStr); } catch (Exception ignored) {}
+            double novoTotal = rendaAtual + valor;
+            String valStr = String.format(Locale.US, "%.2f", novoTotal);
+            prefs.edit().putString("renda", valStr).apply();
+            firestoreDb.collection("users").document(currentUserId).update("renda", valStr);
+        }
+
+        // 3. Investimentos
+        boolean isInvestimento = descLower.contains("investimento") || descLower.contains("investir") || 
+                                descLower.contains("aporte") || descLower.contains("poupança") || 
+                                descLower.contains("poupanca") || descLower.contains("ações") || 
+                                descLower.contains("cdb") || descLower.contains("tesouro");
+
+        if (isInvestimento) {
+            String investAtualStr = prefs.getString("investimentos", "0").replace(",", ".");
+            double investAtual = 0;
+            try { investAtual = Double.parseDouble(investAtualStr.isEmpty() ? "0" : investAtualStr); } catch (Exception ignored) {}
+            double novoTotal = investAtual + valor;
+            String valStr = String.format(Locale.US, "%.2f", novoTotal);
+            prefs.edit().putString("investimentos", valStr).apply();
+            firestoreDb.collection("users").document(currentUserId).update("investimentos", valStr);
         }
     }
 
@@ -173,7 +302,8 @@ public class MainActivity extends AppCompatActivity {
         corpoRequisicao.addProperty("model", "openai/gpt-oss-120b");
         corpoRequisicao.add("messages", messages);
 
-        String tokenAuth = "Bearer " + BuildConfig.GROQ_API_KEY;
+        String apiKey = BuildConfig.GROQ_API_KEY != null ? BuildConfig.GROQ_API_KEY.trim() : "";
+        String tokenAuth = "Bearer " + apiKey;
 
         apiService.mandarParaIA(tokenAuth, corpoRequisicao).enqueue(new Callback<JsonObject>() {
             @Override
@@ -186,6 +316,9 @@ public class MainActivity extends AppCompatActivity {
                                 .get("content").getAsString();
 
                         respostaIA = respostaIA.replace("'", "\"");
+                        if (respostaIA.contains("```")) {
+                            respostaIA = respostaIA.replaceAll("```json", "").replaceAll("```", "").trim();
+                        }
                         com.google.gson.JsonElement element = new JsonParser().parse(respostaIA);
                         JsonArray jsonArray;
                         
@@ -196,21 +329,35 @@ public class MainActivity extends AppCompatActivity {
                             jsonArray.add(element.getAsJsonObject());
                         }
 
+                        String userId = FirebaseAuth.getInstance().getUid();
+
                         for (int i = 0; i < jsonArray.size(); i++) {
                             JsonObject jsonRecebido = jsonArray.get(i).getAsJsonObject();
                             String tipo = jsonRecebido.get("tipo").getAsString();
                             String descricao = jsonRecebido.get("descricao").getAsString();
+                            if (descricao != null && !descricao.trim().isEmpty()) {
+                                descricao = descricao.trim();
+                                descricao = descricao.substring(0, 1).toUpperCase() + descricao.substring(1);
+                            }
                             double valor = jsonRecebido.get("valor").getAsDouble();
                             String data = jsonRecebido.get("data").getAsString();
                             String horario = jsonRecebido.has("horario") ? jsonRecebido.get("horario").getAsString() : "09:00";
 
-                            Tarefa novaTarefa = new Tarefa(FirebaseAuth.getInstance().getUid(), tipo, descricao, valor, data, horario);
+                            // Verificar se é uma assinatura para atualizar o Perfil
+                            verificarEAtualizarAssinaturaNoPerfil(tipo, descricao, valor);
 
-                            // SALVA NO BANCO E ATUALIZA A TELA
-                            new Thread(() -> {
-                                tarefaDao.inserir(novaTarefa);
-                                runOnUiThread(() -> tarefaAdapter.adicionarTarefa(novaTarefa));
-                            }).start();
+                            Tarefa novaTarefa = new Tarefa(userId, tipo, descricao, valor, data, horario);
+
+                            // SALVAR NA NUVEM (FIRESTORE)
+                            if (userId != null) {
+                                firestoreDb.collection("users")
+                                        .document(userId)
+                                        .collection("tarefas")
+                                        .add(novaTarefa);
+                            }
+
+                            // SALVA TAMBÉM LOCALMENTE
+                            new Thread(() -> tarefaDao.inserir(novaTarefa)).start();
                         }
 
                     } catch (Exception e) {
@@ -218,7 +365,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("ERRO_JSON", "Falha no parser", e);
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Erro de API. Olhe o Logcat.", Toast.LENGTH_LONG).show();
+                    try {
+                        String errBody = response.errorBody() != null ? response.errorBody().string() : "null";
+                        Log.e("ERRO_GROQ", "HTTP " + response.code() + ": " + errBody);
+                        Toast.makeText(MainActivity.this, "Erro de API (" + response.code() + "): " + errBody, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.e("ERRO_GROQ", "Erro de API", e);
+                    }
                 }
             }
 

@@ -1,221 +1,365 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cor_fundo"
     android:fitsSystemWindows="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tituloPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        android:text="Meu perfil"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tituloPerfil"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav">
 
-        <ImageButton
-            android:id="@+id/btnAbrirMenu"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_sort_by_size"
-            app:tint="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/tituloPerfil"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Meu Perfil"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/btnAbrirMenu"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnAbrirMenu" />
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/btnAbrirMenu"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="16dp"
+            android:gravity="center_horizontal">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgPerfil"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/azul_safira"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle" />
+
+            <TextView
+                android:id="@+id/textIniciais"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-58dp"
+                android:layout_marginBottom="30dp"
+                android:text="AM"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Nome Completo com Lápis -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp">
 
-                <TextView
+                <EditText
+                    android:id="@+id/editNome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Informações Pessoais"
-                    android:textColor="#8E8E8E"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutNome"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nome Completo"
-                    android:textColorHint="#8E8E8E"
-                    app:boxStrokeColor="@color/azul_safira"
-                    app:hintTextColor="@color/azul_safira"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editNome"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutDataNascimento"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Data de Nascimento"
-                    android:textColorHint="#8E8E8E"
-                    app:boxStrokeColor="@color/azul_safira"
-                    app:hintTextColor="@color/azul_safira"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editDataNascimento"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="date"
-                        android:textColor="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="24dp"
-                    android:background="#1E1F22" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Informações Financeiras"
-                    android:textColor="#8E8E8E"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Sua Renda Mensal (R$)"
-                    android:textColorHint="#8E8E8E"
-                    app:boxStrokeColor="@color/azul_safira"
-                    app:hintTextColor="@color/azul_safira"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editRenda"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Total em Investimentos (R$)"
-                    android:textColorHint="#8E8E8E"
-                    app:boxStrokeColor="@color/azul_safira"
-                    app:hintTextColor="@color/azul_safira"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTotalInvestido"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSalvarInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="SALVAR ALTERAÇÕES"
-                    android:backgroundTint="@color/azul_safira"
-                    app:cornerRadius="8dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="24dp"
-                    android:background="#1E1F22" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Segurança da Conta"
-                    android:textColor="#8E8E8E"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutNovoEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="E-mail da Conta"
-                    android:textColorHint="#8E8E8E"
-                    app:boxStrokeColor="@color/azul_safira"
-                    app:hintTextColor="@color/azul_safira"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editNovoEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAtualizarEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Atualizar E-mail"
-                    android:backgroundTint="@color/azul_safira"
+                    android:background="@null"
+                    android:text="Nome Completo"
                     android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:inputType="textPersonName" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSair"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:text="Sair da Conta"
-                    android:textColor="@color/white"
-                    android:backgroundTint="#F44336"
-                    app:cornerRadius="8dp" />
-
+                <ImageView
+                    android:id="@+id/iconEditNome"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:tint="@color/azul_safira" />
             </LinearLayout>
-        </ScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Data de Nascimento com Lápis -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="4dp">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#1E1F22"
-        app:itemTextColor="#E3E3E3"
-        app:menu="@menu/menu_lateral" />
+                <EditText
+                    android:id="@+id/editDataNascimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:text="00/00/0000"
+                    android:textColor="@color/cor_texto_secundario"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:inputType="date" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+                <ImageView
+                    android:id="@+id/iconEditData"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="6dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:tint="@color/cor_texto_secundario" />
+            </LinearLayout>
+
+            <!-- Card de Dados Financeiros e Conta -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/cor_card"
+                app:cardCornerRadius="20dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#232C4A">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="INFORMAÇÕES FINANCEIRAS"
+                        android:textColor="@color/cor_texto_secundario"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Renda mensal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Renda mensal"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                        <EditText
+                            android:id="@+id/editRenda"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:hint="R$ 0,00"
+                            android:textColorHint="@color/cor_receita"
+                            android:textColor="@color/cor_receita"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="end" />
+                        <ImageView
+                            android:id="@+id/iconEditRenda"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="6dp"
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/cor_receita" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#232C4A"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Assinaturas fixas -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Assinaturas fixas"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                        <EditText
+                            android:id="@+id/editAssinaturas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:hint="R$ 0,00"
+                            android:textColorHint="@color/cor_despesa"
+                            android:textColor="@color/cor_despesa"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="end" />
+                        <ImageView
+                            android:id="@+id/iconEditAssinaturas"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="6dp"
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/cor_despesa" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#232C4A"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Total em investimentos -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total em investimentos"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                        <EditText
+                            android:id="@+id/editTotalInvestido"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:hint="R$ 0,00"
+                            android:textColorHint="@color/azul_safira"
+                            android:textColor="@color/azul_safira"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:gravity="end" />
+                        <ImageView
+                            android:id="@+id/iconEditInvest"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="6dp"
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/azul_safira" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card de Dados da Conta (Firebase) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/cor_card"
+                app:cardCornerRadius="20dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#232C4A">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CONTA E SEGURANÇA"
+                        android:textColor="@color/cor_texto_secundario"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- E-mail -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="E-mail: "
+                            android:textColor="@color/cor_texto_secundario"
+                            android:textSize="15sp" />
+                        <EditText
+                            android:id="@+id/editNovoEmail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:inputType="textEmailAddress"
+                            android:hint="seu.email@exemplo.com"
+                            android:textColorHint="@color/white"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:gravity="end" />
+                        <ImageView
+                            android:id="@+id/iconEditEmail"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="6dp"
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/white" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSalvarInfo"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Salvar alterações"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:backgroundTint="@color/azul_safira"
+                android:textColor="@color/white"
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSair"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:text="Sair da conta"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textColor="#FF5252"
+                android:backgroundTint="#3E2424"
+                app:cornerRadius="16dp" />
+
+            <!-- Hidden view kept for back-compat if needed -->
+            <Button android:id="@+id/btnAtualizarEmail" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_bottom_nav"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemRippleColor="@android:color/transparent"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

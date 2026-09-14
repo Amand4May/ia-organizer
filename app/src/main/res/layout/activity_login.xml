@@ -4,171 +4,264 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azul_safira"
+    android:background="@drawable/bg_login_gradient"
     android:fitsSystemWindows="true">
 
+    <!-- Header com Logo e Subtítulo -->
     <TextView
         android:id="@+id/logoApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Cogni"
+        android:layout_marginTop="50dp"
+        android:text="COGNI"
         android:textColor="@color/white"
-        android:textSize="48sp"
+        android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardLogin"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/subtituloApp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:text="Sua vida financeira, organizada"
+        android:textColor="#D0D5DD"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logoApp"
-        app:layout_constraintVertical_bias="0.4">
+        app:layout_constraintTop_toBottomOf="@id/logoApp" />
 
-        <LinearLayout
+    <!-- Card de Formulário (Login / Cadastro) -->
+    <LinearLayout
+        android:id="@+id/cardLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_card_login"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtituloApp">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgPerfilPlaceholder"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/black"
-                android:padding="16dp"
-                android:src="@android:drawable/ic_menu_camera"
-                android:visibility="gone"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle"
-                app:strokeColor="@color/azul_safira"
-                app:strokeWidth="2dp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutNome"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nome Completo"
-                android:textColorHint="#8E8E8E"
-                android:visibility="gone"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="@color/azul_safira"
-                app:hintTextColor="@color/azul_safira">
+                android:orientation="vertical"
+                android:padding="28dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editNome"
+                <!-- Avatar em modo cadastro -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgPerfilPlaceholder"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/black"
+                    android:padding="16dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:visibility="gone"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle"
+                    app:strokeColor="@color/azul_safira"
+                    app:strokeWidth="2dp" />
+
+                <!-- Label & Input Nome (Modo Cadastro) -->
+                <TextView
+                    android:id="@+id/labelNome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOME COMPLETO"
+                    android:textColor="#8E8E8E"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutNome"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_nav_perfil"
+                    app:startIconTint="#8E8E8E"
+                    app:boxBackgroundColor="#1E222D"
+                    app:boxStrokeColor="@color/azul_safira"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutDataNascimento"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Data de Nascimento"
-                android:textColorHint="#8E8E8E"
-                android:visibility="gone"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="@color/azul_safira"
-                app:hintTextColor="@color/azul_safira">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editNome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Seu nome completo"
+                        android:textColorHint="#5E626E"
+                        android:inputType="textPersonName"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editDataNascimento"
+                <!-- Label & Input Data de Nascimento (Modo Cadastro) -->
+                <TextView
+                    android:id="@+id/labelDataNascimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATA DE NASCIMENTO"
+                    android:textColor="#8E8E8E"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutDataNascimento"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_nav_agenda"
+                    app:startIconTint="#8E8E8E"
+                    app:boxBackgroundColor="#1E222D"
+                    app:boxStrokeColor="@color/azul_safira"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutEmail"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="E-mail"
-                android:textColorHint="#8E8E8E"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="@color/azul_safira"
-                app:hintTextColor="@color/azul_safira">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editDataNascimento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="00/00/0000"
+                        android:textColorHint="#5E626E"
+                        android:inputType="date"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editEmail"
+                <!-- Label & Input E-mail -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="E-MAIL"
+                    android:textColor="#8E8E8E"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutEmail"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="16dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_email"
+                    app:startIconTint="#8E8E8E"
+                    app:boxBackgroundColor="#1E222D"
+                    app:boxStrokeColor="@color/azul_safira"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutSenha"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Senha"
-                android:textColorHint="#8E8E8E"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="@color/azul_safira"
-                app:hintTextColor="@color/azul_safira"
-                app:passwordToggleEnabled="true">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="seu@email.com"
+                        android:textColorHint="#5E626E"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editSenha"
+                <!-- Label & Input Senha -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SENHA"
+                    android:textColor="#8E8E8E"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutSenha"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="8dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_lock"
+                    app:startIconTint="#8E8E8E"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="#8E8E8E"
+                    app:boxBackgroundColor="#1E222D"
+                    app:boxStrokeColor="@color/azul_safira"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEntrar"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@color/azul_safira"
-                android:text="Entrar"
-                android:textColor="@color/white"
-                app:cornerRadius="12dp" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editSenha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="••••••••"
+                        android:textColorHint="#5E626E"
+                        android:inputType="textPassword"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/btnIrParaCadastro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:padding="8dp"
-                android:text="Ainda não tem conta? Criar conta"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+                <!-- Link Esqueceu a Senha -->
+                <TextView
+                    android:id="@+id/btnEsqueceuSenha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:paddingVertical="4dp"
+                    android:text="Esqueceu a senha?"
+                    android:textColor="@color/azul_safira"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="24dp" />
 
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <!-- Botão Principal -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEntrar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:backgroundTint="@color/azul_safira"
+                    android:text="Entrar"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp" />
+
+                <!-- Link Alternar Modo (Criar Conta / Entrar) -->
+                <TextView
+                    android:id="@+id/btnIrParaCadastro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:padding="8dp"
+                    android:text="Ainda não tem conta? Criar conta"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
