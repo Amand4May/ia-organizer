@@ -1,0 +1,12 @@
+{
+  "localDebug": {
+    "package": "com.example.organizadoria.local",
+    "internet": false,
+    "firebase_init": false
+  },
+  "connectedDebug": {
+    "package": "com.example.organizadoria",
+    "internet": true,
+    "firebase_init": true
+  }
+}
