@@ -55,7 +55,7 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         holder.textDescricao.setText(tarefa.getDescricao());
         holder.textSubtitulo.setText(tarefa.getDataExibicao()); // Usando a data como subtitulo padrão
 
-        String tipo = tarefa.getTipo().toLowerCase();
+        String tipo = tarefa.getTipo() == null ? "tarefa" : tarefa.getTipo().toLowerCase(java.util.Locale.ROOT);
 
         if (tipo.contains("receita")) {
             holder.iconContainer.setBackgroundResource(R.drawable.bg_icon_receita);

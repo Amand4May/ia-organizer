@@ -1,0 +1,47 @@
+{
+  "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados/ultimos/10?formato=json",
+  "checked_at": "2026-09-19T13:04:18.861908+00:00",
+  "client": "Python urllib; not Android app",
+  "observations": [
+    {
+      "data": "03/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "04/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "08/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "09/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "10/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "11/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "14/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "15/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "16/09/2026",
+      "valor": "0.051660"
+    },
+    {
+      "data": "17/09/2026",
+      "valor": "0.050788"
+    }
+  ]
+}

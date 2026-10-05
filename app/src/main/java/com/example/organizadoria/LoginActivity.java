@@ -31,12 +31,31 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (BuildConfig.LOCAL_ONLY) {
+            if (AppSession.uid(this) != null) { irParaHome(); return; }
+            ((TextView) findViewById(R.id.subtituloApp)).setText("Cópia local · dados separados");
+            android.widget.LinearLayout card = findViewById(R.id.cardLogin);
+            card.removeAllViews();
+            int pad = (int) (28 * getResources().getDisplayMetrics().density);
+            card.setPadding(pad, pad, pad, pad);
+            TextView message = new TextView(this);
+            message.setText("Use esta cópia para experimentar a Agenda e o Financeiro. Os dados ficam somente neste aparelho. Nenhuma conexão com o Firebase ou a IA externa é realizada.");
+            message.setTextColor(android.graphics.Color.WHITE); message.setTextSize(16);
+            card.addView(message);
+            MaterialButton local = new MaterialButton(this); local.setId(R.id.btnEntrar);
+            local.setText("Entrar na cópia local"); local.setAllCaps(false);
+            local.setOnClickListener(v -> { AppSession.enterLocal(this); irParaHome(); });
+            card.addView(local);
+            return;
+        }
+
         mAuth = FirebaseAuth.getInstance();
 
         // Verificar se o usuário já está logado (Manter Login)
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             irParaHome();
+            return;
         }
 
         editNome = findViewById(R.id.editNome);

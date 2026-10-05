@@ -1,0 +1,37 @@
+{
+  "baseline": "Local financial v1 snapshot; upstream fea0aa38ed1808a939b5cb0ae130fe11d9f84435",
+  "changed_since_v1": [
+    "README_FINANCEIRO.md",
+    "app/build.gradle.kts",
+    "app/src/main/java/com/example/organizadoria/FinanceiroActivity.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/domain/CommandRouter.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/domain/FinanceEngine.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/domain/FinanceState.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceForms.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceFragment.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceScreens.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceUi.java",
+    "app/src/main/res/layout/activity_financeiro.xml",
+    "app/src/main/res/values/finance_styles.xml",
+    "docs/FINANCEIRO_VALIDACAO.md",
+    "tools/tests/FinanceTestSuite.java"
+  ],
+  "new_since_v1": [
+    "app/src/main/java/com/example/organizadoria/financeiro/domain/InvestmentDraft.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/domain/InvestmentEntryPlan.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/domain/InvestmentProjection.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/network/BcbCdiService.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/network/CdiRepository.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceAssistant.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceChart.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceDistribution.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceInvestments.java",
+    "app/src/main/java/com/example/organizadoria/financeiro/ui/FinanceOnboarding.java",
+    "app/src/main/res/drawable/ic_finance_back.xml",
+    "app/src/main/res/drawable/ic_finance_settings.xml",
+    "app/src/test/java/com/example/organizadoria/financeiro/BcbCdiServiceTest.java",
+    "app/src/test/java/com/example/organizadoria/financeiro/ui/FinanceVisualTest.java"
+  ],
+  "missing": [],
+  "unexpected": []
+}

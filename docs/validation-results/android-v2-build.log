@@ -1,0 +1,194 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: :app:assembleLocalDebug :app:assembleConnectedDebug :app:testLocalDebugUnitTest
+
+> Configure project :
+The contents of the immutable workspace '/workspace/scratch/6c26ae154749/android-validation/gradle-cache/caches/9.5.0/transforms/564e58797ea97c95d5dcd00d2b5bcaed' have been modified. These workspace directories are not supposed to be modified once they are created. The modification might have been caused by an external process, or could be the result of disk corruption.
+outputDirectory:
+ - transformed (Directory, c6e601574c8698cd5cecd633a5f43fc1)
+   - .gradle-agent-instrumented.marker (RegularFile, f571933bb948577b1f9f3076fb8fc7c6)
+   - .gradle-instrumented-classpath.marker (RegularFile, f571933bb948577b1f9f3076fb8fc7c6)
+   - instrumented (Directory, 269447fb6c74d20df3098964359f70cc)
+     - instrumented-kotlin-gradle-plugin-2.2.10-gradle813.jar (RegularFile, a388633527c022be6c2ed16b0228f373)
+
+resultsFile:
+ - results.bin (RegularFile, c7039efa8cc7344f8d8a8bd71513a8eb)
+
+The contents of the immutable workspace '/workspace/scratch/6c26ae154749/android-validation/gradle-cache/caches/9.5.0/transforms/564e58797ea97c95d5dcd00d2b5bcaed' have been modified. These workspace directories are not supposed to be modified once they are created. The modification might have been caused by an external process, or could be the result of disk corruption.
+outputDirectory:
+ - transformed (Directory, c6e601574c8698cd5cecd633a5f43fc1)
+   - .gradle-agent-instrumented.marker (RegularFile, f571933bb948577b1f9f3076fb8fc7c6)
+   - .gradle-instrumented-classpath.marker (RegularFile, f571933bb948577b1f9f3076fb8fc7c6)
+   - instrumented (Directory, 269447fb6c74d20df3098964359f70cc)
+     - instrumented-kotlin-gradle-plugin-2.2.10-gradle813.jar (RegularFile, a388633527c022be6c2ed16b0228f373)
+
+resultsFile:
+ - results.bin (RegularFile, c7039efa8cc7344f8d8a8bd71513a8eb)
+
+
+> Configure project :app
+w: file:///workspace/scratch/6c26ae154749/android-validation/project/app/build.gradle.kts:62:39: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+Checking the license for package Android SDK Platform 37.0 in /workspace/scratch/6c26ae154749/android-validation/sdk/licenses
+License for package Android SDK Platform 37.0 accepted.
+Preparing "Install Android SDK Platform 37.0 (revision 2)".
+Warning: Package "Android SDK Platform 37.0" (platforms;android-37.0) should be installed in 
+"/workspace/scratch/6c26ae154749/android-validation/sdk/platforms/android-37.0" but 
+it already exists.
+Installing in "/workspace/scratch/6c26ae154749/android-validation/sdk/platforms/android-37.0-2" instead.
+"Install Android SDK Platform 37.0 (revision 2)" ready.
+Installing Android SDK Platform 37.0 in /workspace/scratch/6c26ae154749/android-validation/sdk/platforms/android-37.0-2
+"Install Android SDK Platform 37.0 (revision 2)" complete.
+"Install Android SDK Platform 37.0 (revision 2)" finished.
+Observed package id 'platforms;android-37.0' in inconsistent location '/workspace/scratch/6c26ae154749/android-validation/sdk/platforms/android-37.0-2' (Expected '/workspace/scratch/6c26ae154749/android-validation/sdk/platforms/android-37.0')
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preLocalDebugBuild UP-TO-DATE
+> Task :app:mergeLocalDebugNativeDebugMetadata NO-SOURCE
+> Task :app:processLocalDebugGoogleServices
+> Task :app:generateLocalDebugBuildConfig
+> Task :app:generateLocalDebugResources
+> Task :app:packageLocalDebugResources
+> Task :app:javaPreCompileLocalDebug
+> Task :app:generateLocalDebugAssets UP-TO-DATE
+> Task :app:processLocalDebugNavigationResources
+> Task :app:mergeLocalDebugAssets
+> Task :app:compressLocalDebugAssets
+> Task :app:parseLocalDebugLocalResources
+> Task :app:generateLocalDebugRFile
+> Task :app:compileLocalDebugKotlin NO-SOURCE
+> Task :app:generateLocalDebugGlobalSynthetics
+
+> Task :app:compileLocalDebugJavaWithJavac
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/main/java/com/example/organizadoria/Tarefa.java:9: warning: There are multiple good constructors and Room will pick the no-arg constructor. You can use the @Ignore annotation to eliminate unwanted constructors.
+public class Tarefa {
+       ^
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/main/java/com/example/organizadoria/Tarefa.java:9: warning: There are multiple good constructors and Room will pick the no-arg constructor. You can use the @Ignore annotation to eliminate unwanted constructors.
+public class Tarefa {
+       ^
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/main/java/com/example/organizadoria/AppDatabase.java:7: warning: Schema export directory was not provided to the annotation processor so Room cannot export the schema. You can either provide `room.schemaLocation` annotation processor argument by applying the Room Gradle plugin (id 'androidx.room') OR set exportSchema to false.
+public abstract class AppDatabase extends RoomDatabase {
+                ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+3 warnings
+
+> Task :app:l8DexDesugarLibLocalDebug
+> Task :app:checkLocalDebugDuplicateClasses
+> Task :app:desugarLocalDebugFileDependencies
+> Task :app:mergeLibDexLocalDebug
+> Task :app:processLocalDebugJavaRes
+> Task :app:mergeLocalDebugJavaResource
+> Task :app:checkLocalDebugAarMetadata
+> Task :app:mapLocalDebugSourceSetPaths
+> Task :app:compileLocalDebugNavigationResources
+> Task :app:mergeExtDexLocalDebug
+> Task :app:createLocalDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksLocalDebug
+> Task :app:processLocalDebugMainManifest
+> Task :app:processLocalDebugManifest
+> Task :app:mergeLocalDebugResources
+> Task :app:mergeLocalDebugJniLibFolders
+> Task :app:processLocalDebugManifestForPackage
+> Task :app:mergeLocalDebugNativeLibs NO-SOURCE
+> Task :app:stripLocalDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningLocalDebug
+> Task :app:writeLocalDebugAppMetadata
+> Task :app:writeLocalDebugSigningConfigVersions
+> Task :app:preConnectedDebugBuild UP-TO-DATE
+> Task :app:mergeConnectedDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateConnectedDebugBuildConfig
+> Task :app:generateConnectedDebugResources
+> Task :app:processConnectedDebugGoogleServices
+> Task :app:packageConnectedDebugResources
+> Task :app:processConnectedDebugNavigationResources
+> Task :app:parseConnectedDebugLocalResources
+> Task :app:generateConnectedDebugRFile
+> Task :app:compileConnectedDebugKotlin NO-SOURCE
+> Task :app:javaPreCompileConnectedDebug
+> Task :app:processLocalDebugResources
+> Task :app:dexBuilderLocalDebug
+
+> Task :app:compileConnectedDebugJavaWithJavac
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/main/java/com/example/organizadoria/Tarefa.java:9: warning: There are multiple good constructors and Room will pick the no-arg constructor. You can use the @Ignore annotation to eliminate unwanted constructors.
+public class Tarefa {
+       ^
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/main/java/com/example/organizadoria/Tarefa.java:9: warning: There are multiple good constructors and Room will pick the no-arg constructor. You can use the @Ignore annotation to eliminate unwanted constructors.
+public class Tarefa {
+       ^
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/main/java/com/example/organizadoria/AppDatabase.java:7: warning: Schema export directory was not provided to the annotation processor so Room cannot export the schema. You can either provide `room.schemaLocation` annotation processor argument by applying the Room Gradle plugin (id 'androidx.room') OR set exportSchema to false.
+public abstract class AppDatabase extends RoomDatabase {
+                ^
+
+> Task :app:mergeProjectDexLocalDebug
+
+> Task :app:compileConnectedDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+3 warnings
+
+> Task :app:generateConnectedDebugAssets UP-TO-DATE
+> Task :app:mergeConnectedDebugAssets
+> Task :app:compressConnectedDebugAssets
+> Task :app:packageLocalDebug
+> Task :app:createLocalDebugApkListingFileRedirect
+> Task :app:assembleLocalDebug
+> Task :app:generateConnectedDebugGlobalSynthetics
+> Task :app:processConnectedDebugJavaRes
+> Task :app:mergeConnectedDebugJavaResource
+> Task :app:checkConnectedDebugDuplicateClasses
+> Task :app:desugarConnectedDebugFileDependencies
+> Task :app:l8DexDesugarLibConnectedDebug
+> Task :app:mergeLibDexConnectedDebug
+> Task :app:checkConnectedDebugAarMetadata
+> Task :app:mapConnectedDebugSourceSetPaths
+> Task :app:compileConnectedDebugNavigationResources
+> Task :app:mergeConnectedDebugResources
+> Task :app:createConnectedDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksConnectedDebug
+> Task :app:processConnectedDebugMainManifest
+> Task :app:processConnectedDebugManifest
+> Task :app:processConnectedDebugManifestForPackage
+> Task :app:mergeExtDexConnectedDebug
+> Task :app:mergeConnectedDebugJniLibFolders
+> Task :app:mergeConnectedDebugNativeLibs NO-SOURCE
+> Task :app:stripConnectedDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningConnectedDebug
+> Task :app:writeConnectedDebugAppMetadata
+> Task :app:writeConnectedDebugSigningConfigVersions
+> Task :app:bundleLocalDebugClassesToRuntimeJar
+> Task :app:bundleLocalDebugClassesToCompileJar
+> Task :app:preLocalDebugUnitTestBuild UP-TO-DATE
+> Task :app:compileLocalDebugUnitTestKotlin NO-SOURCE
+> Task :app:javaPreCompileLocalDebugUnitTest
+> Task :app:processConnectedDebugResources
+> Task :app:dexBuilderConnectedDebug
+> Task :app:mergeProjectDexConnectedDebug
+> Task :app:packageConnectedDebug
+> Task :app:createConnectedDebugApkListingFileRedirect
+> Task :app:assembleConnectedDebug
+> Task :app:packageLocalDebugUnitTestForUnitTest
+
+> Task :app:mergeLocalDebugUnitTestManifest
+/workspace/scratch/6c26ae154749/android-validation/project/app/src/local/AndroidManifest.xml:6:9-166 Warning:
+	provider#com.google.firebase.provider.FirebaseInitProvider was tagged at AndroidManifest.xml:6 to remove other declarations but no other declaration present
+/workspace/scratch/6c26ae154749/android-validation/project/app/build/intermediates/tmp/manifest/test/local/debug/tempFile2ProcessTestManifest11607401738741470609.xml:14:5-46:19 Warning:
+	application@android:label was tagged at tempFile2ProcessTestManifest11607401738741470609.xml:14 to replace other declarations but no other declaration present
+/workspace/scratch/6c26ae154749/android-validation/project/app/build/intermediates/tmp/manifest/test/local/debug/tempFile2ProcessTestManifest11607401738741470609.xml:14:5-46:19 Warning:
+	application@android:allowBackup was tagged at tempFile2ProcessTestManifest11607401738741470609.xml:14 to replace other declarations but no other declaration present
+
+> Task :app:processLocalDebugUnitTestManifest
+> Task :app:generateLocalDebugUnitTestConfig
+> Task :app:processLocalDebugUnitTestJavaRes NO-SOURCE
+> Task :app:compileLocalDebugUnitTestJavaWithJavac
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.robolectric.nativeruntime.DefaultNativeRuntimeLoader in an unnamed module
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+> Task :app:testLocalDebugUnitTest
+
+[Incubating] Problems report is available at: file:///workspace/scratch/6c26ae154749/android-validation/project/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 5m 51s
+83 actionable tasks: 83 executed
+Configuration cache entry stored.
