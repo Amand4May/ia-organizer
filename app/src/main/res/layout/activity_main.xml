@@ -78,6 +78,21 @@
             app:tint="@color/white" />
     </LinearLayout>
 
+    <!-- Aparece enquanto a IA está processando o comando -->
+    <TextView
+        android:id="@+id/textPensando"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="8dp"
+        android:text="✦ Organizador está agendando..."
+        android:textColor="@color/cor_texto_secundario"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/barraDigitacao"
+        app:layout_constraintStart_toStartOf="@id/barraDigitacao"
+        app:layout_constraintEnd_toEndOf="@id/barraDigitacao" />
+
     <TextView
         android:id="@+id/labelProximas"
         android:layout_width="wrap_content"
@@ -87,7 +102,7 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/barraDigitacao"
+        app:layout_constraintTop_toBottomOf="@id/textPensando"
         app:layout_constraintStart_toStartOf="@id/barraDigitacao" />
 
     <TextView

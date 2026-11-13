@@ -15,6 +15,16 @@ public class Tarefa {
     @Ignore
     public String docId; // ID do documento no Firestore
 
+    /** Valor do gasto vinculado ao compromisso, em centavos (0 = sem gasto). Só para exibição. */
+    @Exclude
+    @Ignore
+    public long gastoCentavos;
+
+    /** true quando o gasto vinculado já foi pago (vermelho); false enquanto é previsto (amarelo). */
+    @Exclude
+    @Ignore
+    public boolean gastoPago;
+
     public String userId; // ID do usuário para separar os dados
     public String tipo;
     public String descricao;

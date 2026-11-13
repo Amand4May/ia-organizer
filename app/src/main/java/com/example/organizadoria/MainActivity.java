@@ -29,14 +29,22 @@ public class MainActivity extends AppCompatActivity {
     @Override protected void onStop(){if(feed!=null)feed.stop();super.onStop();}
     @Override protected void onResume(){super.onResume();if(!Navigation.requireSession(this))return;Navigation.bind(this,R.id.nav_inicio);greeting();}
     @Override protected void onNewIntent(Intent intent){super.onNewIntent(intent);setIntent(intent);if(input!=null&&intent.getBooleanExtra("focarInput",false))input.requestFocus();}
-    @Override protected void onDestroy(){if(request!=null)request.cancel();super.onDestroy();}
+    @Override protected void onDestroy(){dotsHandler.removeCallbacks(dotsTick);if(request!=null)request.cancel();super.onDestroy();}
     @Override protected void onSaveInstanceState(Bundle state){super.onSaveInstanceState(state);state.putString("pendingOperation",pendingOperation);state.putString("pendingText",pendingText);}
     private void greeting(){
         int hour=LocalTime.now().getHour();((TextView)findViewById(R.id.textBomDia)).setText(hour>=5&&hour<12?"BOM DIA":hour>=12&&hour<18?"BOA TARDE":"BOA NOITE");
         String uid=AppSession.uid(this);String name=getSharedPreferences("DadosPerfil_"+uid,MODE_PRIVATE).getString("nome","").trim();
         ((TextView)findViewById(R.id.textSaudacao)).setText(name.isEmpty()?"Vamos organizar?":"Vamos organizar,\n"+name.split("\\s+")[0]+"?");
     }
-    private void busy(boolean value){sending=value;send.setEnabled(!value);input.setEnabled(!value);send.setAlpha(value?.4f:1);}
+    private final android.os.Handler dotsHandler=new android.os.Handler(android.os.Looper.getMainLooper());private int dots;
+    private final Runnable dotsTick=new Runnable(){public void run(){
+        dots=dots%3+1;((TextView)findViewById(R.id.textPensando)).setText("✦ Organizador está agendando"+"...".substring(0,dots));dotsHandler.postDelayed(this,400);
+    }};
+    private void busy(boolean value){
+        sending=value;send.setEnabled(!value);input.setEnabled(!value);send.setAlpha(value?.4f:1);
+        findViewById(R.id.textPensando).setVisibility(value?android.view.View.VISIBLE:android.view.View.GONE);
+        dotsHandler.removeCallbacks(dotsTick);if(value){dots=0;dotsTick.run();}
+    }
     private void failure(String text){if(isFinishing()||isDestroyed())return;busy(false);new AlertDialog.Builder(this).setTitle("Não foi possível registrar").setMessage(text).setPositiveButton("Entendi",null).show();}
     private void submit(){
         if(sending)return;String text=input.getText().toString().trim();if(text.isEmpty())return;

@@ -88,7 +88,7 @@ public final class CommandRouter {
                     setContribution(s,c.percent,c.amount,c.basisPoints,today);
                     messages.add("Plano de aporte atualizado para o ciclo atual e os próximos recebimentos.");break;
                 case RECURRING_BILL:
-                    addRule(s,c.title,c.amount,c.day,c.date,CASH,today);messages.add("Conta recorrente cadastrada.");break;
+                    addRule(s,c.title,c.amount,c.day,c.date,c.endDate,CASH,today);messages.add("Gasto fixo cadastrado: todo dia "+c.day+(c.endDate==null?".":", até "+c.endDate.substring(8,10)+"/"+c.endDate.substring(5,7)+"/"+c.endDate.substring(0,4)+"."));break;
                 case SET_INVESTED:
                     reconcileBalance(s,INVEST,c.amount,today);messages.add("Posição investida atualizada.");break;
                 case CONFIG_RETURN:
@@ -97,7 +97,7 @@ public final class CommandRouter {
                 case GOAL:
                     addGoal(s,c.title,c.amount,c.date,today);messages.add("Meta cadastrada.");break;
                 case SIMULATE:case REQUIRED_CONTRIBUTION: {
-                    
+
                     if(c.action==REQUIRED_CONTRIBUTION) messages.add("Aporte estimado: "+Money.format(InvestmentProjection.requiredPortfolioMonthly(s,c.amount,c.annualRate,c.months,null,today))+"/mês em "+c.months+" meses.");
                     else {
                         long monthly=c.amountSpecified || c.amount>0?c.amount:plannedContribution(s,s.settings.salaryCents);

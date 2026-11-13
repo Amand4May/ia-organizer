@@ -34,7 +34,9 @@ public final class AgendaFeed {
         List<Tarefa> tasks=new ArrayList<>();synchronized(legacy){tasks.addAll(legacy);}
         FinanceState state=repo.snapshot();
         for(FinanceState.AgendaItem a:state.agenda)if(!a.cancelled){
-            Tarefa t=new Tarefa(state.userId,"tarefa",a.title,0,a.date,a.time);t.setDocId("v1:"+a.id);tasks.add(t);
+            Tarefa t=new Tarefa(state.userId,"tarefa",a.title,0,a.date,a.time);t.setDocId("v1:"+a.id);
+            if(a.forecastId!=null)for(FinanceState.Forecast f:state.forecasts)if(a.forecastId.equals(f.id)&&!f.cancelled){t.gastoCentavos=f.amountCents;t.gastoPago=f.completed;}
+            tasks.add(t);
         }
         tasks.sort(Comparator.comparing((Tarefa t)->t.data==null?"":t.data).thenComparing(t->t.horario==null?"":t.horario));
         activity.runOnUiThread(()->{if(active&&!activity.isFinishing())consumer.accept(tasks);});

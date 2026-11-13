@@ -5,7 +5,7 @@ public final class OrganizerCommand {
         CONTRIBUTION, PLAN_CONTRIBUTION, WITHDRAWAL, RECURRING_BILL, SET_INVESTED, CONFIG_RETURN,
         SIMULATE, REQUIRED_CONTRIBUTION, GOAL }
     public Action action;
-    public String title="", date, time="09:00", targetId;
+    public String title="", date, endDate, time="09:00", targetId;
     public long amount;
     public int day, months=60, basisPoints;
     public double annualRate=Double.NaN;

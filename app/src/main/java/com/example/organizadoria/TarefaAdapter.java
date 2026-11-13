@@ -62,14 +62,18 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             holder.imgIcon.setImageResource(R.drawable.ic_target_blue);
             holder.badgeContainer.setBackgroundResource(R.drawable.bg_badge_receita);
             holder.textBadge.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_receita));
-            holder.textBadge.setText(String.format("+R$ %.2f", tarefa.getValor()));
+            holder.textBadge.setText("+" + com.example.organizadoria.financeiro.domain.Money.format(Math.round(tarefa.getValor() * 100)));
+            if (tarefa.data == null) holder.textSubtitulo.setText(tarefa.gastoPago ? "Receita · recebida" : "Recebimento previsto");
 
         } else if (tipo.contains("despesa")) {
+            // Mesmas cores das bolinhas: amarelo = previsto, vermelho = realizado
+            int cor = ContextCompat.getColor(holder.itemView.getContext(), tarefa.gastoPago ? R.color.cor_vermelho : R.color.cor_previsto);
             holder.iconContainer.setBackgroundResource(R.drawable.bg_icon_despesa);
             holder.imgIcon.setImageResource(R.drawable.ic_card_yellow);
             holder.badgeContainer.setBackgroundResource(R.drawable.bg_badge_despesa);
-            holder.textBadge.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.cor_despesa));
-            holder.textBadge.setText(String.format("R$ %.2f", tarefa.getValor()));
+            holder.textBadge.setTextColor(cor);
+            holder.textBadge.setText(com.example.organizadoria.financeiro.domain.Money.format(Math.round(tarefa.getValor() * 100)));
+            if (tarefa.data == null) holder.textSubtitulo.setText(tarefa.gastoPago ? "Gasto realizado" : "Gasto previsto");
 
         } else {
             // Tarefa
@@ -94,7 +98,18 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             }
 
             holder.textBadge.setText(tarefa.getHorario() + sufixo);
-            holder.textSubtitulo.setText("Agendado para " + tarefa.getDataExibicao());
+            String agendado = "Agendado para " + tarefa.getDataExibicao();
+            if (tarefa.gastoCentavos > 0) {
+                // Valor na cor da bolinha da agenda: amarelo = previsto, vermelho = pago
+                String valor = com.example.organizadoria.financeiro.domain.Money.format(tarefa.gastoCentavos)
+                        + (tarefa.gastoPago ? " pago" : " previsto");
+                android.text.SpannableString texto = new android.text.SpannableString(agendado + " · " + valor);
+                int cor = ContextCompat.getColor(holder.itemView.getContext(), tarefa.gastoPago ? R.color.cor_vermelho : R.color.cor_previsto);
+                texto.setSpan(new android.text.style.ForegroundColorSpan(cor), texto.length() - valor.length(), texto.length(), android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.textSubtitulo.setText(texto);
+            } else {
+                holder.textSubtitulo.setText(agendado);
+            }
         }
 
         holder.itemView.setOnLongClickListener(v -> {

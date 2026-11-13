@@ -11,4 +11,5 @@
     <color name="cor_texto_secundario">#8E8E8E</color>
     <color name="ciano">#00E5FF</color>
     <color name="cor_vermelho">#F44336</color>
+    <color name="cor_previsto">#FFD600</color>
 </resources>

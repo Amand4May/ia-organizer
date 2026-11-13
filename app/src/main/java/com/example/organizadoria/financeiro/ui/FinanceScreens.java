@@ -93,11 +93,16 @@ final class FinanceScreens {
         for(Forecast a:s.forecasts)if(matches(f,a.title,a.date) && ((f.filter.equals("Cancelados") && a.cancelled) || ((f.filter.equals("Planejados") || f.filter.equals("Tudo")) && remaining(s,a)>0)))rows.add(a);
         for(Entry a:s.entries)if(matches(f,a.title,a.date)){
             boolean include=f.filter.equals("Estornados")?a.voided:!a.voided && (f.filter.equals("Tudo") || f.filter.equals("Realizados") ||
-                    f.filter.equals("Receitas")&&a.kind==Kind.INCOME || f.filter.equals("Despesas")&&a.kind==Kind.EXPENSE || f.filter.equals("Aportes")&&a.kind==Kind.CONTRIBUTION);
+                                                                                 f.filter.equals("Receitas")&&a.kind==Kind.INCOME || f.filter.equals("Despesas")&&a.kind==Kind.EXPENSE || f.filter.equals("Aportes")&&a.kind==Kind.CONTRIBUTION);
             if(include)rows.add(a);
         }
-        rows.sort((a,b)->{String da=a instanceof Entry?((Entry)a).date:((Forecast)a).date,db=b instanceof Entry?((Entry)b).date:((Forecast)b).date;return db.compareTo(da);});
-        note(p,rows.size()+" registros encontrados");for(Object a:rows){if(a instanceof Entry)entryRow(f,p,(Entry)a);else planRow(f,p,s,(Forecast)a);}
+        // Realizados: mais recente em cima. Planejados: mais próximo em cima (não o mais distante, como 2027).
+        List<Entry> done=new ArrayList<>();List<Forecast> planned=new ArrayList<>();
+        for(Object a:rows){if(a instanceof Entry)done.add((Entry)a);else planned.add((Forecast)a);}
+        done.sort((a,b)->b.date.compareTo(a.date));planned.sort((a,b)->a.date.compareTo(b.date));
+        note(p,rows.size()+" registros encontrados");boolean both=!done.isEmpty()&&!planned.isEmpty();
+        if(both)heading(p,"Realizados");for(Entry a:done)entryRow(f,p,a);
+        if(both)heading(p,"Planejados");for(Forecast a:planned)planRow(f,p,s,a);
         if(rows.isEmpty())note(p,"Nenhum registro neste filtro.");
     }
     static void planning(FinanceFragment f,LinearLayout p,FinanceState s){

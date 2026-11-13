@@ -209,11 +209,16 @@ public final class FinanceEngine {
         s.settings.lastScheduledOn=today;
     }
     public static Rule addRule(FinanceState s,String title,long amount,int day,String start,String accountId,String today) {
+        return addRule(s,title,amount,day,start,null,accountId,today);
+    }
+    /** end (opcional, inclusivo): último dia em que a conta ainda é cobrada. */
+    public static Rule addRule(FinanceState s,String title,long amount,int day,String start,String end,String accountId,String today) {
+        if(end!=null){date(end);require(end.compareTo(start)>=0,"A data final deve ser depois do início da conta recorrente.");}
         ready(s); date(start); payday(YearMonth.from(date(start)),day);
         require(account(s,accountId).kind==AccountKind.CASH,"Contas recorrentes usam uma conta de movimentação.");
         require(start.compareTo(s.settings.validFrom)>=0,"A recorrência deve começar a partir do início do seu financeiro. Cadastre dívidas anteriores como previsões avulsas.");
         require(amount>0 && title!=null && !title.trim().isEmpty(),"Informe descrição e valor da conta.");
-        Rule r=new Rule(); r.id=id(); r.title=title.trim(); r.amountCents=amount; r.day=day; r.startDate=start; r.accountId=accountId;
+        Rule r=new Rule(); r.id=id(); r.title=title.trim(); r.amountCents=amount; r.day=day; r.startDate=start; r.endDate=end; r.accountId=accountId;
         s.rules.add(r); ensureSchedule(s,today); return r;
     }
     public static void stopRule(FinanceState s,String id,String today) {
@@ -232,7 +237,7 @@ public final class FinanceEngine {
         for(Cycle c:s.cycles) if(c.closed && effective.compareTo(c.startDate)>=0 && effective.compareTo(c.closedDate)<=0) {
             Cycle active=activeCycle(s);
             require((active!=null && effective.compareTo(active.startDate)>=0)
-                    || (active==null && effective.equals(today) && effective.equals(c.closedDate)),
+                            || (active==null && effective.equals(today) && effective.equals(c.closedDate)),
                     "Esse período está fechado. Registre um ajuste no ciclo atual.");
         }
     }

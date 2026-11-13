@@ -95,7 +95,7 @@ final class FinanceForms {
         if(a.agendaId!=null)text+="\nVinculado a um compromisso da Agenda.";
         if(a.completed || a.cancelled){message(f,a.title,text+"\n"+FinanceScreens.statusLabel(s,a));return;}
         alert(f,a.title).setMessage(text).setPositiveButton("Confirmar valor",(d,w)->settlement(f,id)).setNeutralButton("Editar",(d,w)->plan(f,id)).setNegativeButton("Cancelar previsão",(d,w)->
-            alert(f,"Cancelar previsão?").setMessage("Os valores já realizados serão preservados. O restante deixará de ficar comprometido.").setPositiveButton("Cancelar previsão",(x,y)->f.mutate(state->cancelForecast(state,id,f.today()),null)).setNegativeButton("Voltar",null).show()).show();
+                alert(f,"Cancelar previsão?").setMessage("Os valores já realizados serão preservados. O restante deixará de ficar comprometido.").setPositiveButton("Cancelar previsão",(x,y)->f.mutate(state->cancelForecast(state,id,f.today()),null)).setNegativeButton("Voltar",null).show()).show();
     }
     static void settlement(FinanceFragment f,String id){
         FinanceState s=f.state();Forecast a=forecast(s,id);Form form=new Form(f.requireContext());form.moneyField("value","Valor efetivamente realizado (R$)",Money.input(remaining(s,a)));
@@ -118,17 +118,19 @@ final class FinanceForms {
             f.mutate(state->{boolean complete=e.forecastId!=null && forecast(state,e.forecastId).completed;voidEntry(state,e.id,"Substituído por correção",f.today());record(state,key,e.kind,title,amount,date,e.fromAccountId,e.toAccountId,e.forecastId,complete,f.today());},d);});
     }
     static void rule(FinanceFragment f){
-        Form form=new Form(f.requireContext());form.textField("title","Descrição","");form.moneyField("value","Valor previsto (R$)","");form.numberField("day","Dia do vencimento (1–31)","10");form.dateField("start","Primeira data válida (AAAA-MM-DD)",f.today());
-        form.dialog("Conta recorrente","Cadastrar",d->{String title=form.value("title"),start=form.value("start");long amount=value(form,"value");int day=integer(form,"day");f.mutate(state->addRule(state,title,amount,day,start,CASH,f.today()),d);});
+        Form form=new Form(f.requireContext());form.textField("title","Descrição","");form.moneyField("value","Valor previsto (R$)","");form.numberField("day","Dia do vencimento (1–31)","10");form.dateField("start","Primeira data válida (AAAA-MM-DD)",f.today());form.dateField("end","Última cobrança, opcional (AAAA-MM-DD)","");
+        form.dialog("Conta recorrente","Cadastrar",d->{String title=form.value("title"),start=form.value("start"),end=optional(form.value("end"));long amount=value(form,"value");int day=integer(form,"day");f.mutate(state->addRule(state,title,amount,day,start,end,CASH,f.today()),d);});
     }
     static void ruleDetails(FinanceFragment f,String id){
         Rule selected=null;for(Rule r:f.state().rules)if(r.id.equals(id))selected=r;if(selected==null)return;Rule r=selected;
-        alert(f,r.title).setMessage(Money.format(r.amountCents)+" todo dia "+r.day+".\nEncerrar a recorrência cancela somente previsões futuras sem pagamento. Contas atrasadas e pagamentos parciais permanecem.")
+        alert(f,r.title).setMessage(Money.format(r.amountCents)+" todo dia "+r.day+(r.endDate==null?"":", até "+FinanceScreens.displayDate(r.endDate))+".\nEncerrar a recorrência cancela somente previsões futuras sem pagamento. Contas atrasadas e pagamentos parciais permanecem.")
                 .setPositiveButton("Encerrar recorrência",(d,w)->f.mutate(state->stopRule(state,id,f.today()),null)).setNeutralButton("Alterar próximos valores",(d,w)->editRule(f,r)).setNegativeButton("Voltar",null).show();
     }
     static void editRule(FinanceFragment f,Rule old){
-        Form form=new Form(f.requireContext());form.moneyField("value","Novo valor previsto (R$)",Money.input(old.amountCents));form.numberField("day","Novo dia de vencimento",String.valueOf(old.day));
-        form.dialog("Alterar recorrência","Salvar",d->{long amount=value(form,"value");int day=integer(form,"day");f.mutate(state->{stopRule(state,old.id,f.today());addRule(state,old.title,amount,day,f.today(),old.accountId,f.today());},d);});
+        Form form=new Form(f.requireContext());form.moneyField("value","Novo valor previsto (R$)",Money.input(old.amountCents));form.numberField("day","Novo dia de vencimento",String.valueOf(old.day));form.dateField("end","Última cobrança, opcional (AAAA-MM-DD)",old.endDate==null?"":old.endDate);
+        form.dialog("Alterar recorrência","Salvar",d->{long amount=value(form,"value");int day=integer(form,"day");String end=optional(form.value("end"));f.mutate(state->{stopRule(state,old.id,f.today());addRule(state,old.title,amount,day,f.today(),end,old.accountId,f.today());},d);});
+    }
+    private static String optional(String value){return value==null||value.trim().isEmpty()?null:value.trim();
     }
     static void account(FinanceFragment f){
         Form form=new Form(f.requireContext());form.textField("name","Nome da conta","");Spinner type=form.select("Tipo",Arrays.asList("Conta de movimentação","Aplicação / investimento"));form.moneyField("value","Saldo existente hoje (R$)","0,00");
