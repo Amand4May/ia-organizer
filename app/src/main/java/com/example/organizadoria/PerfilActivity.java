@@ -30,7 +30,7 @@ public class PerfilActivity extends AppCompatActivity {
         findViewById(R.id.btnSair).setOnClickListener(v->{AppSession.signOut(this);startActivity(new Intent(this,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));});
         repository=AppServices.repository(this);
     }
-    private void focus(EditText field){field.requestFocus();field.setSelection(field.getText().length());android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);if(keyboard!=null)keyboard.showSoftInput(field,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);}
+    private void focus(EditText field){field.requestFocus();field.setSelection(field.getText().length());android.view.inputmethod.InputMethodManager keyboard=(android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);if(keyboard!=null)field.post(()->keyboard.showSoftInput(field,0));}
     private void dateMask(){birth.addTextChangedListener(new android.text.TextWatcher(){
         private String current="";
         public void beforeTextChanged(CharSequence s,int start,int count,int after){}
