@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SplashTransition.aplicar(this);
         setContentView(R.layout.activity_login);
 
         if (BuildConfig.LOCAL_ONLY) {

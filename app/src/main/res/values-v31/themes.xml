@@ -1,3 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Tela de abertura (Android 12+): fundo Azul Safira com o "C" do ícone -->
+    <style name="Theme.OrganizadorIA" parent="Base.Theme.OrganizadorIA">
+        <item name="android:windowSplashScreenBackground">@color/azul_safira</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+    </style>
 </resources>

@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText input;private ImageButton send;private TarefaAdapter adapter;private AgendaFeed feed;
     private Call<JsonObject> request;private boolean sending;private String pendingOperation,pendingText;
     @Override protected void onCreate(Bundle saved){
-        super.onCreate(saved);setContentView(R.layout.activity_main);if(!Navigation.requireSession(this))return;
+        super.onCreate(saved);SplashTransition.aplicar(this);setContentView(R.layout.activity_main);if(!Navigation.requireSession(this))return;
         Navigation.bind(this,R.id.nav_inicio);input=findViewById(R.id.inputComando);send=findViewById(R.id.btnEnviar);
         if(saved!=null){pendingOperation=saved.getString("pendingOperation");pendingText=saved.getString("pendingText");}
         RecyclerView list=findViewById(R.id.listaTarefas);list.setLayoutManager(new LinearLayoutManager(this));adapter=new TarefaAdapter();list.setAdapter(adapter);
