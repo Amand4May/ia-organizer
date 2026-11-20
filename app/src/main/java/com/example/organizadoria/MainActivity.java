@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.textPensando).setVisibility(value?android.view.View.VISIBLE:android.view.View.GONE);
         dotsHandler.removeCallbacks(dotsTick);if(value){dots=0;dotsTick.run();}
     }
-    private void failure(String text){if(isFinishing()||isDestroyed())return;busy(false);new AlertDialog.Builder(this).setTitle("Não foi possível registrar").setMessage(text).setPositiveButton("Entendi",null).show();}
+    // Mesmo tema escuro dos diálogos do Financeiro, para o app ter um visual só.
+    private AlertDialog.Builder dialogo(){return new AlertDialog.Builder(this,R.style.Theme_Finance_Dialog);}
+    private void failure(String text){if(isFinishing()||isDestroyed())return;busy(false);dialogo().setTitle("Não foi possível registrar").setMessage(text).setPositiveButton("Entendi",null).show();}
     private void submit(){
         if(sending)return;String text=input.getText().toString().trim();if(text.isEmpty())return;
         if(!text.equals(pendingText) || pendingOperation==null){pendingText=text;pendingOperation=FinanceEngine.id();}
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 if(isDestroyed()||!Objects.equals(uid,AppSession.uid(MainActivity.this)))return;
                 if(!response.isSuccessful()||response.body()==null){failure("A IA não respondeu corretamente (HTTP "+response.code()+"). Seu texto foi preservado.");return;}
                 try{String content=response.body().getAsJsonArray("choices").get(0).getAsJsonObject().getAsJsonObject("message").get("content").getAsString();confirm(text,RemoteCommandCodec.parse(content,today),operation,uid,today);}
+                catch(RemoteCommandCodec.NadaParaRegistrar e){failure(e.getMessage());}
                 catch(Exception e){failure("Não consegui validar a resposta da IA: "+e.getMessage());}
             }
             @Override public void onFailure(Call<JsonObject> call,Throwable error){if(!call.isCanceled())failure("Não foi possível conectar à IA. Seu texto foi preservado.");}
@@ -86,13 +89,14 @@ public class MainActivity extends AppCompatActivity {
             resumo.append("• ").append(rotulo(c.action));
             if(c.title!=null&&!c.title.isEmpty())resumo.append(": ").append(c.title);
             if(c.amount>0)resumo.append(" · ").append(Money.format(c.amount));
-            if(c.date!=null){try{resumo.append(" · ").append(LocalDate.parse(c.date).format(br));}catch(Exception ignored){resumo.append(" · ").append(c.date);}}
+            if(c.action==OrganizerCommand.Action.RECURRING_BILL&&c.day>0)resumo.append(" · todo dia ").append(c.day);
+            else if(c.date!=null){try{resumo.append(" · ").append(LocalDate.parse(c.date).format(br));}catch(Exception ignored){resumo.append(" · ").append(c.date);}}
             if(c.action==OrganizerCommand.Action.TASK&&c.time!=null)resumo.append(" às ").append(c.time);
             resumo.append("\n");
         }
         boolean suspeito=SUSPEITO.matcher(text).find();
         if(suspeito)resumo.append("\n⚠️ Seu texto tem instruções incomuns. Confira se cada item foi você mesmo que pediu.");
-        new AlertDialog.Builder(this).setTitle(suspeito?"Revise com atenção":"Confirma o que vou registrar?").setMessage(resumo.toString().trim())
+        dialogo().setTitle(suspeito?"Revise com atenção":"Confirma o que vou registrar?").setMessage(resumo.toString().trim())
             .setPositiveButton("Confirmar",(d,w)->execute(commands,operation,uid,today))
             .setNegativeButton("Cancelar",(d,w)->busy(false)).setOnCancelListener(d->busy(false)).show();
     }
@@ -104,10 +108,10 @@ public class MainActivity extends AppCompatActivity {
             if(error instanceof CommandRouter.AmbiguousMatch){
                 CommandRouter.AmbiguousMatch match=(CommandRouter.AmbiguousMatch)error;FinanceState s=AppServices.repository(this).snapshot();
                 String[] options=new String[match.forecastIds.size()];for(int i=0;i<options.length;i++){FinanceState.Forecast p=FinanceEngine.forecast(s,match.forecastIds.get(i));options[i]=p.title+" · "+p.date+" · "+Money.format(FinanceEngine.remaining(s,p));}
-                new AlertDialog.Builder(this).setTitle("Qual previsão você quer confirmar?").setItems(options,(d,index)->{commands.get(match.commandIndex).targetId=match.forecastIds.get(index);execute(commands,operation,uid,today);}).setNegativeButton("Voltar",(d,w)->busy(false)).setOnCancelListener(d->busy(false)).show();return;
+                dialogo().setTitle("Qual previsão você quer confirmar?").setItems(options,(d,index)->{commands.get(match.commandIndex).targetId=match.forecastIds.get(index);execute(commands,operation,uid,today);}).setNegativeButton("Voltar",(d,w)->busy(false)).setOnCancelListener(d->busy(false)).show();return;
             }
             if(error!=null){failure(error.getMessage());return;}
-            busy(false);input.setText("");pendingOperation=null;pendingText=null;new AlertDialog.Builder(this).setTitle("Cogni").setMessage(android.text.TextUtils.join("\n\n",messages)).setPositiveButton("Entendi",null).show();
+            busy(false);input.setText("");pendingOperation=null;pendingText=null;dialogo().setTitle("Cogni").setMessage(android.text.TextUtils.join("\n\n",messages)).setPositiveButton("Entendi",null).show();
         });
     }
 }

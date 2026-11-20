@@ -8,6 +8,10 @@ import java.util.*;
 /** JSON da IA é entrada não confiável: valida o contrato inteiro antes de gravar. */
 public final class RemoteCommandCodec {
     private RemoteCommandCodec(){}
+    /** A IA devolveu [] (fora do escopo ou faltou informação): não é falha, só não há nada a gravar. */
+    public static final class NadaParaRegistrar extends IllegalArgumentException{
+        NadaParaRegistrar(){super("Não encontrei nada para registrar. Eu entendo gastos, ganhos, compromissos e investimentos, com valor quando houver. Ex.: \"gastei 80 no presente\".");}
+    }
     /** Modelo usado pelo assistente. Escolhido pela avaliação (cogni-eval): qwen3.8-27b acertou 51/52 em 2 rodadas. */
     public static final String MODEL="qwen/qwen3.8-27b";
     private static final String[] DIAS={"segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado","domingo"};
@@ -34,7 +38,8 @@ public final class RemoteCommandCodec {
     public static List<OrganizerCommand> parse(String raw,String today){
         String clean=raw.trim();if(clean.startsWith("```"))clean=clean.replaceFirst("^```(?:json)?\\s*","").replaceFirst("\\s*```$","");
         JsonElement root=new JsonParser().parse(clean);
-        if(!root.isJsonArray() || root.getAsJsonArray().size()==0 || root.getAsJsonArray().size()>20)throw new IllegalArgumentException("A resposta deve conter de 1 a 20 ações.");
+        if(root.isJsonArray() && root.getAsJsonArray().size()==0)throw new NadaParaRegistrar();
+        if(!root.isJsonArray() || root.getAsJsonArray().size()>20)throw new IllegalArgumentException("A resposta deve conter de 1 a 20 ações.");
         List<OrganizerCommand> out=new ArrayList<>();
         for(JsonElement element:root.getAsJsonArray()){
             if(!element.isJsonObject())throw new IllegalArgumentException("Ação inválida na resposta.");JsonObject obj=element.getAsJsonObject();
